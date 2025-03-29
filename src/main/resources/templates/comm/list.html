@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HAPLA 커뮤니티</title>
+    <link href="/css/list.css" rel="stylesheet" type="text/css">
+    <style>
+        /* 공지사항 스타일 */
+        .notice-row {
+            background-color: #f8f9fa;
+            position: relative;
+        }
+        
+        .notice-row td {
+            padding: 15px 10px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .notice-row:hover {
+            background-color: #edf2f7;
+        }
+        
+        .notice-badge {
+            display: inline-block;
+            background-color: #306263;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        
+        .important-notice {
+            background-color: #f8f0e8;
+        }
+        
+        .important-badge {
+            display: inline-block;
+            background-color: #e53e3e;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+        
+        .notice-title {
+            font-weight: 600;
+            color: #1a202c;
+        }
+        
+        .important-title {
+            font-weight: 700;
+            color: #1a202c;
+        }
+        
+        /* 구분선 스타일 */
+        .notice-divider {
+            height: 2px;
+            background-color: #e2e8f0;
+            margin: 0;
+            border: none;
+        }
+    </style>
+    
+</head>
+<body>
+    <!-- 헤더 포함 -->
+    <div th:replace="~{common/header.html :: topbar}"></div>
+    
+    <main>
+        <section class="banner">
+            <img src="/img/communityBanner.png" alt="커뮤니티 배너">
+            <!-- 🔹 검색 폼 -->
+            <form action="/comm/list" method="GET" onsubmit="return validateForm()">
+                <div class="search">
+                    <h1>여행의 설렘을 함께 나누는 공간 당신의 정보를 공유해보세요</h1>
+                    <div class="searchDiv">
+	                    <select name="category" id="category">
+						        <option value="0" th:selected="${category == '0'}">전체</option>
+						        <option value="1">지역</option>
+								<option value="2">항공권</option>
+								<option value="3">숙소</option>
+								<option value="4">즐길거리</option>
+								<option value="5">음식점</option>
+						    </select>
+	                    <input type="search" name="search" id="search" placeholder="장소 또는 액티비티로 검색" th:value="${search}">
+	                    <button type="submit">
+	                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+	                            <path fill="#306263" d="M21.562,18.733l-2.767-2.767c-0.569-0.569-0.779-1.431-0.465-2.172 c0.588-1.386,0.822-2.957,0.57-4.609c-0.548-3.591-3.422-6.507-7.01-7.075c-5.779-0.915-10.695,4-9.779,9.779 
+	                            c0.568,3.588,3.484,6.461,7.075,7.01c1.652,0.252,3.223,0.019,4.609-0.57c0.741-0.315,1.603-0.104,2.172,0.465l2.767,2.767
+	                            c0.586,0.586,1.536,0.586,2.121,0l0.707-0.707C22.148,20.269,22.148,19.319,21.562,18.733z M4,10.5C4,6.916,6.916,4,10.5,4
+	                            S17,6.916,17,10.5S14.084,17,10.5,17S4,14.084,4,10.5z"></path>
+	                        </svg>
+	                    </button>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        <section class="community">
+            <h2>커뮤니티</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th width="10%">카테고리</th>
+                        <th width="45%">제목</th>
+                        <th width="10%">작성자</th>
+                        <th width="10%">좋아요</th>
+                        <th width="10%">조회수</th>
+                        <th width="15%">등록일</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <!-- 공지사항 목록 -->
+                    <tr th:each="notice : ${noticeList}" 
+                        th:class="${notice.isImportant == 'Y' ? 'notice-row important-notice' : 'notice-row'}"
+                        th:data-notice-no="${notice.noticeNo}">
+                        <td>
+                            <span th:class="${notice.isImportant == 'Y' ? 'important-badge' : 'notice-badge'}">공지</span>
+                        </td>
+                        <td>
+                            <span th:class="${notice.isImportant == 'Y' ? 'important-title' : 'notice-title'}" 
+                                  th:text="${notice.title}">공지사항 제목</span>
+                        </td>
+                        <td>관리자</td>
+                        <td>-</td>
+                        <td th:text="${notice.views}">0</td>
+                        <td th:text="${#dates.format(notice.createDate, 'yyyy-MM-dd')}">2023-01-01</td>
+                    </tr>
+                    
+<!--                     <tr th:if="${not #lists.isEmpty(noticeList)}"> -->
+<!--                         <td colspan="6" class="notice-divider"></td> -->
+<!--                     </tr> -->
+                    
+                    <tr th:each="comm : ${list}" th:data-comm-no="${comm.commNo}">
+                        <td>[[${comm.categoryName}]]</td>
+                        <td>[[${comm.title}]]</td>
+                        <td>[[${comm.nickname}]]</td>
+                        <td>[[${comm.likes}]]</td>
+                        <td>[[${comm.views}]]</td>
+                        <td>[[${#dates.format(comm.createDate, 'yyyy-MM-dd')}]]</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        
+        <button class="write-Button" id="write-Button" type="button" onclick="location.href='/comm/write'">새 글 작성</button>
+
+		<!-- 페이지 네이션 -->
+        <div class="pagination-container">
+            <ul class="pagination">
+                <!-- 이전 페이지 -->
+                <li class="page-item" th:classappend="${pi.currentPage == 1} ? 'disabled'">
+                    <a class="page-link" th:href="@{/comm/list(page=${pi.currentPage-1}, search=${search}, category=${category})}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+
+                <!-- 페이지 번호 -->
+                <li class="page-item" th:each="p : ${#numbers.sequence(pi.startPage, pi.endPage)}"
+                    th:classappend="${p == pi.currentPage} ? 'active'">
+                    <a class="page-link" th:href="@{/comm/list(page=${p}, search=${search}, category=${category})}">[[${p}]]</a>
+                </li>
+
+                <!-- 다음 페이지 -->
+                <li class="page-item" th:classappend="${pi.currentPage == pi.maxPage} ? 'disabled'">
+                    <a class="page-link" th:href="@{/comm/list(page=${pi.currentPage+1}, search=${search}, category=${category})}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+    </main>    
+
+    <!-- 푸터 포함 -->
+    <div th:replace="~{common/footer.html :: foot}"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // 🔹 게시글 클릭 시 상세 페이지 이동
+            document.querySelectorAll("tbody tr").forEach(row => {
+                row.addEventListener("click", function () {
+                    const commNo = this.getAttribute("data-comm-no");
+                    const currentPage = "[[${pi.currentPage}]]";
+                    location.href = `/comm/` + commNo + `/` + currentPage;
+                });
+            });
+
+            // 🔹 검색 폼 유효성 검사
+            document.querySelector("form").addEventListener("submit", function (event) {
+                const searchValue = document.getElementById("search").value.trim();
+                if (searchValue === '') {
+                    alert('검색어를 입력하세요');
+                    event.preventDefault();
+                }
+            });
+            
+            // 공지사항 클릭 시 상세 페이지 이동
+            document.querySelectorAll("tbody tr[data-notice-no]").forEach(row => {
+                row.addEventListener("click", function () {
+                    const noticeNo = this.getAttribute("data-notice-no");
+                    const currentPage = "[[${pi.currentPage}]]";
+                    location.href = `/comm/notice/` + noticeNo + `/` + currentPage;
+                });
+            });
+        });
+    </script>
+</body>
+</html>

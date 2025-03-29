@@ -1,0 +1,79 @@
+/* styles.css */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+}
+
+
+.overlay {
+	position: absolute;
+    top: 60%; /* 더 아래로 이동 */
+    left: 10%; /* 좌측으로 이동 */
+    transform: translate(-10%, -40%);
+    text-align: left;
+    padding: 20px;
+    color: white;
+    border-radius: 8px;
+}
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+/* 버튼 스타일 */
+.buttons {
+    display: flex;
+    gap: 15px;
+}
+
+.buttons .btn {
+    background: white;
+    color: #87CEFA; /* 연한 하늘빛 */
+    border: 1px solid #87CEFA;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.buttons .btn:hover {
+    background: #f0f8ff;
+}
+
+/* 콘텐츠 스타일 */
+.content {
+    min-height: 50vh;
+    background: white;
+}
+
+/* 푸터 스타일 */
+.footer {
+    background: #ddd;
+    padding: 20px;
+    text-align: center;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-around;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.footer-section h2 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+    font-size: 0.9rem;
+}
+
+.footer-section li {
+    margin-bottom: 5px;
+}

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HAPLA 커뮤니티</title>
+    <link href="/css/reviewWrite.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div th:replace="~{common/header.html :: topbar}"></div>
+<main class="content">
+    <!-- 블러 처리된 배경 -->
+    <div class="hero">
+        <h3>리뷰 작성</h3>
+    </div>
+
+    <!-- 리뷰 작성 컨테이너 -->
+    <div class="container">
+        <form class="review-form" id="review-form" method="post" action="/review/insert">
+            <input type="hidden" name="userNo" th:value="${session.loginUser == null ? '' : session.loginUser.userNo}">
+
+            <div class="form-group">
+                <label>1. 리뷰 제목</label>
+                <input class="form-control" id="title" name="title" style="height:10px;" placeholder="제목을 입력하세요" required>
+            </div>
+
+            <div class="form-group">
+                <label>2. 귀하의 경험에 대해 평가해주세요.</label>
+                <div class="rating">
+                    <span onclick="setRating(1)">★</span>
+                    <span onclick="setRating(2)">★</span>
+                    <span onclick="setRating(3)">★</span>
+                    <span onclick="setRating(4)">★</span>
+                    <span onclick="setRating(5)">★</span>
+                    <span id="rating-text">보통</span>
+                    <input type="hidden" id="rating-value" name="rating" value="3"> <!-- 기본값 3 -->
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>3. 언제 다녀오셨나요?</label>
+                <select id="when" name="when" required>
+                    <option value="최근 1개월 이내">최근 1개월 이내</option>
+                    <option value="3개월 이내">3개월 이내</option>
+                    <option value="6개월 이내">6개월 이내</option>
+                    <option value="1년 이상 이전">1년 이상 이전</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>4. 누구와 함께 가셨나요?</label>
+                <div class="tags">
+                    <span class="tag" onclick="toggleTag(this)">비즈니스</span>
+                    <span class="tag" onclick="toggleTag(this)">커플</span>
+                    <span class="tag" onclick="toggleTag(this)">가족</span>
+                    <span class="tag" onclick="toggleTag(this)">친구</span>
+                    <span class="tag active" onclick="toggleTag(this)">혼자</span> <!-- 기본 선택 -->
+                </div>
+                <input type="hidden" id="withWhom-value" name="withWhom" value="혼자">
+            </div>
+
+            <div class="form-group">
+                <label>5. 리뷰 쓰기</label>
+                <textarea id="review-content" name="content" rows="8" placeholder="경험을 공유해주세요" required></textarea>
+            </div>
+			<div class="form-group">
+			    <label>6. 사진 첨부</label>
+                <input type="file" id="imageUp" accept="image/*" style="display: none;">
+                <button type="button" class="image-upload-btn" onclick="document.getElementById('imageUp').click()">
+                    파일 선택
+                </button>
+			    <br>
+			    <h3>미리보기</h3>
+                <div id="imageSection">
+                    <!--미리보기 이미지-->
+                </div>
+			    <input type="hidden" id="image-urls" name="imageUrls" value=""> <!-- 업로드된 이미지 URL 저장 -->
+			</div>
+            <button type="submit" class="submit-btn">리뷰 작성 완료</button>
+        </form>
+    </div>
+</main>
+
+<script>
+    document.getElementById('imageUp').addEventListener('change', function (e){
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append('image', file);
+
+        console.log(formData)
+
+        fetch('/upload', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (!response.ok) throw new Error('업로드 실패: ' + response.status);
+                return response.json();
+            })
+            .then(data => {
+                console.log("받은 데이터:", data);
+                if (data.imagePath) {
+                    document.getElementById('imageSection').innerHTML += `<img id="uploadedImage" src="` + data.imagePath + `" style="max-width:300px;">`
+                    console.log(data.imagePath)
+                    const url = document.getElementById('image-urls');
+                    if (url.value.trim() != ''){
+                        url.value += ',' + data.imagePath
+                    }else{
+                        url.value = data.imagePath;
+                    }
+                    console.log(url)
+                }
+            })
+            .catch(error => {
+                console.error('이미지 업로드 에러:', error);
+                alert('이미지 업로드에 실패했습니다. 다시 시도해주세요.');
+            });
+    });
+
+
+    function setRating(rating) {
+        let stars = document.querySelectorAll('.rating span');
+        let ratingText = document.getElementById("rating-text");
+        let ratingInput = document.getElementById("rating-value");
+
+        stars.forEach((star, index) => {
+            star.style.color = index < rating ? "gold" : "gray";
+        });
+
+        let texts = ["나쁨", "보통", "좋음", "아주 좋음", "최고"];
+        ratingText.innerText = texts[rating - 1];
+        ratingInput.value = rating;
+    }
+
+    function toggleTag(tag) {
+        let selectedTag = document.getElementById("withWhom-value");
+
+        document.querySelectorAll(".tags .tag").forEach(t => t.classList.remove("active"));
+        tag.classList.add("active");
+
+        selectedTag.value = tag.innerText;
+    }
+</script>
+<div th:replace="~{common/footer.html :: foot}"></div>
+</body>
+</html>

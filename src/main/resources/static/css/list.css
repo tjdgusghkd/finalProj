@@ -1,0 +1,257 @@
+/* ✅ 기본 설정 */
+
+head{
+	position: relative;
+}
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.hapla-logo {
+    font-weight: bold;
+    color: #0099cc;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+/* ✅ 배너 스타일 */
+.banner {
+    position: relative;
+    color: white;
+    padding: 50px 20px;
+}
+
+.banner img {
+    width: 100%;
+    height: auto;
+}
+
+.banner .search {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    text-align: center;
+}
+
+.banner input {
+    padding: 10px;
+    width: 50%;
+    margin-top: 10px;
+}
+
+/* ✅ 커뮤니티 테이블 스타일 */
+.community {
+    margin: 20px auto;
+    width: 80%;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f4f4f4;
+}
+
+td {
+	cursor: pointer;
+}
+
+/* ✅ 기본적으로 모든 ul은 block (일반 리스트 스타일 유지) */
+ul {
+    display: block;
+    list-style-type: disc;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 40px;
+    unicode-bidi: isolate;
+}
+
+/* ✅ footer 내부의 ul은 block 유지 */
+main ul {
+    display: block !important;
+}
+
+/* ✅ pagination을 감싸는 div를 사용하여 가로 정렬 */
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 20px; /* 필요 시 조정 가능 */
+}
+
+/* ✅ pagination만 가로 정렬 */
+ul.pagination {
+    display: flex !important;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap; /* ✅ 여러 줄로 떨어지지 않도록 설정 */
+    gap: 5px; /* 버튼 간격 */
+    padding: 10px 0;
+    list-style: none;
+    margin: 0;
+    padding-inline-start: 0;
+}
+
+/* ✅ 페이지 아이템 스타일 */
+.pagination .page-item {
+    margin: 0 5px;
+    display: flex;
+    align-items: center;
+}
+
+/* ✅ 페이지 링크 스타일 */
+.pagination .page-link {
+    text-decoration: none;
+    color: #ff7e5f;
+    border: 1px solid #ddd;
+    padding: 8px 12px;
+    border-radius: 5px;
+    transition: background 0.3s, color 0.3s;
+    display: inline-block;
+}
+
+/* ✅ 현재 페이지 스타일 */
+.pagination .page-item.active .page-link {
+    background: linear-gradient(to right, #ff7e5f, #f76c6c);
+    color: white;
+    border: 1px solid #ff7e5f;
+}
+
+/* ✅ 페이지 링크 hover 효과 */
+.pagination .page-link:hover {
+    background: linear-gradient(to right, #ff7e5f, #f76c6c);
+    color: white;
+}
+
+/* ✅ 이전/다음 버튼 스타일 */
+.pagination .page-item:first-child .page-link,
+.pagination .page-item:last-child .page-link {
+    font-weight: bold;
+    padding: 8px 16px;
+}
+
+/* ✅ 비활성화된 버튼 스타일 */
+.pagination .page-item.disabled .page-link {
+    color: #ccc;
+    cursor: not-allowed;
+    border: 1px solid #ddd;
+    background-color: #f8f9fa;
+}
+
+/* ✅ 검색 박스 스타일 */
+.searchDiv {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 10px;
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+
+/* ✅ 카테고리 선택 박스 */
+.searchDiv select {
+    flex: 1;
+    width:100px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    background: #ffffff;
+    color: #333;
+    outline: none;
+    cursor: pointer;
+}
+
+/* ✅ 검색 입력창 */
+.searchDiv input[type="search"] {
+    flex: 2;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    outline: none;
+    width: 100%;
+    background: #ffffff;
+    margin-top:-1px;
+}
+
+/* ✅ 검색 버튼 */
+.searchDiv button {
+    background: #ffffff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ✅ 검색 버튼 아이콘 */
+.searchDiv button svg {
+    fill: white;
+    width: 20px;
+    height: 20px;
+}
+
+/* ✅ 반응형 디자인 */
+@media (max-width: 768px) {
+    .searchDiv {
+        flex-direction: column;
+        gap: 8px;
+        border: none;
+        background: none;
+    }
+
+    .searchDiv select,
+    .searchDiv input[type="search"],
+    .searchDiv button {
+        width: 100%;
+    }
+}
+
+/* ✅ 목록 버튼 스타일 */
+.write-Button {
+	position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+	right: 200px;
+    width: 120px; /* 📌 가로 길이 고정 */
+    height: 40px; /* 📌 버튼 높이 조정 */
+    padding: 10px 20px;
+    background: linear-gradient(to right, #ff7e5f, #f76c6c);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* ✅ 마우스 호버 시 */
+.write-Button:hover {
+    background: linear-gradient(to right, #f76c6c, #ff5e62);
+    box-shadow: 0 4px 8px rgba(247, 108, 108, 0.3);
+}

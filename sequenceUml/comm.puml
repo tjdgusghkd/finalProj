@@ -1,0 +1,50 @@
+@startuml
+actor User
+participant Browser
+participant Controller
+participant Service
+participant Database
+
+== 댓글 작성 ==
+User -> Browser : 댓글 작성 요청 (AJAX)
+Browser -> Controller : POST /comm/reply
+Controller -> Service : insertReply()
+Service -> Database : 댓글 저장
+Database --> Service : 저장 완료
+Service -> Controller : 댓글 목록 조회
+Controller --> Browser : 댓글 목록 반환 (JSON)
+Browser --> User : 댓글 목록 갱신
+
+== 댓글 수정 ==
+User -> Browser : 댓글 수정 요청 (AJAX)
+Browser -> Controller : PUT /comm/reply
+Controller -> Service : updateReply()
+Service -> Database : 댓글 업데이트
+Database --> Service : 업데이트 완료
+Service --> Controller : 업데이트 성공
+Controller --> Browser : 업데이트 결과 반환
+Browser --> User : 댓글 수정 결과 표시
+
+== 댓글 삭제 ==
+User -> Browser : 댓글 삭제 요청 (AJAX)
+Browser -> Controller : DELETE /comm/reply
+Controller -> Service : deleteReply()
+Service -> Database : 댓글 삭제
+Database --> Service : 삭제 완료
+Service --> Controller : 삭제 성공
+Controller --> Browser : 삭제 결과 반환
+Browser --> User : 댓글 삭제 결과 표시
+
+== 좋아요 처리 ==
+User -> Browser : 좋아요 버튼 클릭
+Browser -> Controller : POST /comm/like
+Controller -> Service : checkUserLike()
+Service -> Database : 좋아요 여부 확인
+Database --> Service : 확인 결과 반환
+Service -> Service : addLike() 또는 removeLike()
+Service -> Database : 좋아요 추가/제거
+Database --> Service : 처리 완료
+Service --> Controller : 좋아요 개수 반환
+Controller --> Browser : 좋아요 결과 반환 (JSON)
+Browser --> User : 좋아요 버튼 상태 갱신
+@enduml

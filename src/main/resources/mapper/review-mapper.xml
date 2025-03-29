@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hapla.review.model.mapper.ReviewMapper">
+    <select id="getListCount" parameterType="int" resultType="int">
+        SELECT COUNT(*) 
+        FROM review
+    </select>
+    
+    <select id="selectReviewList" resultType="com.hapla.review.model.vo.Review">
+	    SELECT review.review_no, review.user_no, users.nickname, review.title, review.content,
+	           review.rating, review.create_date, review.update_date, review.when, review.with_whom, review.thumnail, review.image_urls,
+	           NVL(like_table.like_count, 0) AS likes
+	    FROM review
+	    JOIN users ON review.user_no = users.user_no
+	    left join (select review_no, count(*) as like_count from rlike group by review_no) like_table
+	    		on review.review_no = like_table.review_no
+	    WHERE review.status = 'Y'
+	    ORDER BY review.create_date DESC
+	</select>
+	
+	<select id="selectReview" resultType="com.hapla.review.model.vo.Review">
+		select review.*, users.nickname, users.profile
+		from review
+			 join users on review.user_no = users.user_no
+		where review.review_no = #{reviewNo}
+	</select>
+	
+	<insert id="insertReview">
+	    <selectKey order="BEFORE" resultType="int" keyProperty="reviewNo">
+	        SELECT seq_review.nextval FROM dual
+	    </selectKey>
+	    INSERT INTO review
+	    VALUES (#{reviewNo}, #{userNo}, #{title}, #{content}, #{rating}, SYSDATE, SYSDATE, #{when}, #{withWhom}, #{thumnail}, #{imageUrls}, default)
+	</insert>
+	
+	<select id="checkUserLike" resultType="int">
+	    SELECT COUNT(*) FROM rlike WHERE user_no = #{userNo} AND review_no = #{reviewNo}
+	</select>
+	
+	<insert id="insertLike" parameterType="map">
+	    INSERT INTO rlike VALUES (seq_rlike.nextval, #{userNo}, #{reviewNo})
+	</insert>
+	
+	<delete id="deleteLike" parameterType="map">
+	    DELETE FROM rlike WHERE user_no = #{userNo} AND review_no = #{reviewNo}
+	</delete>
+	
+	<select id="countLikes" parameterType="map" resultType="int">
+	    SELECT count(*) FROM rlike WHERE review_no = #{reviewNo}
+	</select>
+	
+	<select id="searchReviewList" parameterType="string" resultType="com.hapla.review.model.vo.Review">
+        SELECT review_no, user_no, title, content, rating, create_date, thumnail,
+               (SELECT COUNT(*) FROM rlike WHERE review_no = r.review_no) AS likes,
+               (SELECT nickname FROM users WHERE user_no = r.user_no) AS nickname
+        FROM review r
+        WHERE (title LIKE '%' || #{search} || '%' 
+        OR content LIKE '%' || #{search} || '%')
+        ORDER BY create_date DESC
+    </select>
+    
+    <select id="getSearchListCount" parameterType="string" resultType="int">
+        SELECT COUNT(*) FROM review 
+        WHERE (title LIKE '%' || #{search} || '%' 
+        OR content LIKE '%' || #{search} || '%')
+    </select>
+	
+	<update id="deleteReview">
+		update review
+		set status = 'N'
+		where review_no = #{reviewNo}
+	</update>
+	
+</mapper>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>여행 일정</title>
+    <link rel="stylesheet" href="/css/schedule.css" type="text/css">
+</head>
+<body>
+<div class="container">
+    <!-- 🌍 왼쪽 사이드바 -->
+    <div class="sidebar">
+        <div class="sidebar-head">
+<!--         	<div class="hapla-logo" onclick="location.href='/main'">HAPLA</div> -->
+                <span class="menu" id="menuBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path d="M 3 5 A 1.0001 1.0001 0 1 0 3 7 L 21 7 A 1.0001 1.0001 0 1 0 21 5 L 3 5 z M 3 11 A 1.0001 1.0001 0 1 0 3 13 L 21 13 A 1.0001 1.0001 0 1 0 21 11 L 3 11 z M 3 17 A 1.0001 1.0001 0 1 0 3 19 L 21 19 A 1.0001 1.0001 0 1 0 21 17 L 3 17 z"></path>
+                    </svg>
+                </span>
+        </div>
+        <div class="sidebar-title">
+            <span class="trip-title" id="tripTitle" th:text="${trip.cityName}"></span>
+            <span id="tripDates"></span>
+        </div>
+        <!-- ✅ 날짜별 일정 리스트 -->
+        <div class="date-list" id="dateList">
+            <div th:each="date : ${dateRange}" class="date-container">
+                <div class="plan-title">
+                    <input type="hidden" th:value="${#dates.format(date, 'yy/MM/dd')}" class="selectDate"/>
+                    <span th:text="${#dates.format(date, 'M월 d일')}"></span>
+                </div>
+                <div class="date-item">
+                    <div class="addDetail"></div>
+                    <div class="addMemo"></div>
+                    <div class="controls">
+                        <div class="control-add" onclick="toggleControls(this)">
+                            <span class="add-text">+추가</span>
+                        </div>
+                        <div class="control-btns" hidden>
+			            		<span id="memoBtn" class="control-btn" onclick="openSidePanel('memo')">
+			            			<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
+                                         width="24px" fill="#858585">
+			            			<path d="M560-80v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q8 9 12.5 20t4.5 22q0 11-4 22.5T903-300L683-80H560Zm300-263-37-37 37 
+			            			37ZM620-140h38l121-122-18-19-19-18-122 121v38ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v120h-80v-80H520v-200H
+			            			240v640h240v80H240Zm280-400Zm241 199-19-18 37 37-18-19Z"/></svg>
+			            			<path xmlns="http://www.w3.org/2000/svg" d="M560-80v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q8 9 12.5 20t4.5 22q0 11-4 22.5T903-
+			            			300L683-80H560Zm300-263-37-37 37 37ZM620-140h38l121-122-18-19-19-18-122 121v38ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h3
+			            			20l240 240v120h-80v-80H520v-200H240v640h240v80H240Zm280-400Zm241 199-19-18 37 37-18-19Z"/></span>
+                            <span id="stayBtn" class="control-btn" onclick="openSidePanel('stay')">
+			            			<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
+                                         width="24px" fill="#858585"><path
+                                            d="M480-480q33 0 56.5-23.5T560-560q0-33-23.5-56.5T480-640q-33 0-56.5 23.5T400-560q0 33 23.5 56.5T480-480Zm0 294q122-112 181-203.5T720-552q0-109-69.5-178.5T480-800q-101 0-170.5 69.5T240-552q0 71 59 162.5T480-186Zm0 106Q319-217 239.5-334.5T160-552q0-150 96.5-239T480-880q127 0 223.5 89T800-552q0 100-79.5 217.5T480-80Zm0-480Z"/></svg>
+			            			</span>
+                            <!-- <span id="markerBtn" class="control-btn" onclick="openSidePanel('marker')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="24px" fill="#858585">
+                                    <path d="M80-200v-240q0-27 11-49t29-39v-112q0-50 35-85t85-35h160q23 0 43 8.5t37 23.5q17-15 37-23.5t43-8.5h160q50
+                                    0 85 35t35 85v112q18 17 29 39t11 49v240h-80v-80H160v80H80Zm440-360h240v-80q0-17-11.5-28.5T720-680H560q-17 0-28.5 11.
+                                    5T520-640v80Zm-320 0h240v-80q0-17-11.5-28.5T400-680H240q-17 0-28.5 11.5T200-640v80Zm-40 200h640v-80q0-17-11.5-28.5T760
+                                    -480H200q-17 0-28.5 11.5T160-440v80Zm640 0H160h640Z"/></svg>
+                                    <path xmlns="http://www.w3.org/2000/svg" d="M80-200v-240q0-27 11-49t29-39v-112q0-50 35-85t85-35h160q23 0 43 8.5t37 23.5q17-15
+                                    37-23.5t43-8.5h160q50 0 85 35t35 85v112q18 17 29 39t11 49v240h-80v-80H160v80H80Zm440-360h240v-80q0-17-11.5-28.5T720-680H560q-17
+                                    0-28.5 11.5T520-640v80Zm-320 0h240v-80q0-17-11.5-28.5T400-680H240q-17 0-28.5 11.5T200-640v80Zm-40 200h640v-80q0-17-11.5-28.5T760-
+                                    480H200q-17 0-28.5 11.5T160-440v80Zm640 0H160h640Z"/></span> -->
+                            <span id="closeBtn" class="control-btn" onclick="closeControls(event)"><svg
+                                    xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
+                                    width="24px" fill="#858585"><path
+                                    d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
+			            								<path xmlns="http://www.w3.org/2000/svg"
+                                                              d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <input type="hidden" id="tripNo" name="tripNo" th:value="${trip.tripNo}">
+        <div class="save-btn">
+        	<button class="save-btn" onclick="saveDetail()">저장</button>
+        </div>
+    </div>
+
+    <!-- 사이드 패널 (메모 패널) -->
+    <div id="memo-panel" class="side-panel hidden">
+        <div class="panel-header">
+            <span>메모 작성</span>
+            <!-- <button onclick="closeMemoPanel()">닫기</button> -->
+        </div>
+        <textarea id="memo-text"></textarea>
+        <button class="saveMemo" onclick="saveMemo()">저장</button>
+    </div>
+
+    <!-- 사이드 패널 (숙소 검색 패널) -->
+    <div id="stay-panel" class="side-panel hidden">
+        <div class="panel-header">
+            <span>장소 검색</span>
+            <!--  <button onclick="closePlacePanel()">닫기</button> -->
+        </div>
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="장소 검색" oninput="filterPlaces()">
+            <span class="search-icon">
+	               <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                        fill="#5f6368"><path
+                           d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/></svg>
+	            </span>
+        </div>
+        <!-- 검색 결과 리스트 -->
+        <ul id="search-results"></ul>
+    </div>
+
+    <!-- 🌍 Google 지도 -->
+    <div id="map"></div>
+</div>
+
+<script src="/js/schedule.js"></script>
+
+<!-- Google Maps API -->
+<!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAUKMdSgSqvtUy4wZvUxqA6I_c0Zk4InEU&callback=initMap"></script> -->
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAUKMdSgSqvtUy4wZvUxqA6I_c0Zk4InEU&libraries=places&callback=initMap"></script>
+
+</body>
+</html>

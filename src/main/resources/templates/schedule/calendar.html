@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>여행 일정 선택</title>
+    <link rel="stylesheet" href="/css/scheduleCalendar.css" type="text/css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<body>
+
+    <!-- 🌍 Google Maps 배경 -->
+    <div id="map"></div>
+
+    <!-- 📅 왕복 날짜 선택 모달 -->
+    <div id="calendarModal" class="modal">
+        <span class="close" onclick="closeCalendarModal()">&times;</span>
+        <h2>여행 일정을 선택하세요</h2>
+        
+        <div class="calendar-container">
+            <!-- 🛫 출발 날짜 -->
+            <div class="calendar-box">
+                <label for="startDate">출발 날짜</label>
+                <input type="text" id="startDate" placeholder="출발 날짜 선택">
+            </div>
+            
+            <!-- 🛬 도착 날짜 -->
+            <div class="calendar-box">
+                <label for="endDate">도착 날짜</label>
+                <input type="text" id="endDate" placeholder="도착 날짜 선택">
+            </div>
+        </div>
+
+        <button onclick="saveDates()">저장</button>
+    </div>
+    <form>
+    	<input type="hidden" name="startDate">
+    	<input type="hidden" name="endDate">
+    	<input type="hidden" name="cityName">
+    </form>
+
+    <script src="/js/scheduleCalendar.js"></script>
+
+	<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+	<script src="https://npmcdn.com/flatpickr@4.6.13/dist/l10n/ko.js"></script>
+	
+	<!-- Google Maps API -->
+		    <script async defer
+		        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAUKMdSgSqvtUy4wZvUxqA6I_c0Zk4InEU&callback=initMap">
+		    </script>
+</body>
+</html>

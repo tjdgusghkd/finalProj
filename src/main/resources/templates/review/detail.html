@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HAPLA 커뮤니티</title>
+    <link href="/css/reviewDetail.css" rel="stylesheet" type="text/css">
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+</head>
+<body>
+<div th:replace="~{common/header.html :: topbar}"></div>
+<main class="content">
+	<div class="hero">
+        <h3 style="color: #58a;">리뷰</h3>
+    </div>
+    
+    <div class="review-container">
+    	<form class="needs-validation" method="POST" id="detailForm">
+    		<input type="hidden" id="userNo" th:value="${session.loginUser != null ? session.loginUser.userNo : ''}">
+    		<input type="hidden" name="reviewNo" th:value="${r.reviewNo}">
+			<input type="hidden" name="page" th:value="${page}">
+	        <div class="review-header">
+	            <img th:src="@{${r.profile != null ? r.profile : '/img/default-profile.png'}}" alt="리뷰 작성자 프로필" class="profile-img">
+	            <div>
+	                <p class="review-meta" th:text="${r.nickname}"></p>
+                    <p class="review-meta" th:text="${#dates.format(r.createDate, 'yyyy/MM/dd')}"></p>
+	            </div>
+	        </div>
+	        <button id="likeBtn" class="btn btn-outline-danger btn-sm" style="margin-left: 10px;">
+			    <!-- 좋아요가 눌리지 않은 상태(빈 하트) -->
+			    <svg th:attr="style=${isLiked == false} ? 'display: inline;' : 'display: none;'" 
+			         fill="#000000" height="40px" width="40px" version="1.1" id="heart-outline" 
+			         xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+			         viewBox="0 0 471.701 471.701" xml:space="preserve">
+			        <g>
+			            <path d="M433.601,67.001c-24.7-24.7-57.4-38.2-92.3-38.2s-67.7,13.6-92.4,38.3l-12.9,12.9l-13.1-13.1
+			                c-24.7-24.7-57.6-38.4-92.5-38.4c-34.8,0-67.6,13.6-92.2,38.2c-24.7,24.7-38.3,57.5-38.2,92.4c0,34.9,13.7,67.6,38.4,92.3
+			                l187.8,187.8c2.6,2.6,6.1,4,9.5,4c3.4,0,6.9-1.3,9.5-3.9l188.2-187.5c24.7-24.7,38.3-57.5,38.3-92.4
+			                C471.801,124.501,458.301,91.701,433.601,67.001z M414.401,232.701l-178.7,178l-178.3-178.3c-19.6-19.6-30.4-45.6-30.4-73.3
+			                s10.7-53.7,30.3-73.2c19.5-19.5,45.5-30.3,73.1-30.3c27.7,0,53.8,10.8,73.4,30.4l22.6,22.6c5.3,5.3,13.8,5.3,19.1,0l22.4-22.4
+			                c19.6-19.6,45.7-30.4,73.3-30.4c27.6,0,53.6,10.8,73.2,30.3c19.6,19.6,30.3,45.6,30.3,73.3
+			                C444.801,187.101,434.001,213.101,414.401,232.701z"/>
+			        </g>
+			    </svg>
+			    
+			    <!-- 좋아요가 눌린 상태(빨간색 하트) -->
+			    <svg th:attr="style=${isLiked == true} ? 'display: inline;' : 'display: none;'" 
+				     height="40px" width="40px" version="1.1" id="heart-fill" 
+				     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+				     viewBox="0 0 471.701 471.701" xml:space="preserve">
+				    <g>
+				        <path fill="red" d="M433.601,67.001c-24.7-24.7-57.4-38.2-92.3-38.2s-67.7,13.6-92.4,38.3l-12.9,12.9l-13.1-13.1
+				            c-24.7-24.7-57.6-38.4-92.5-38.4c-34.8,0-67.6,13.6-92.2,38.2c-24.7,24.7-38.3,57.5-38.2,92.4c0,34.9,13.7,67.6,38.4,92.3
+				            l187.8,187.8c2.6,2.6,6.1,4,9.5,4c3.4,0,6.9-1.3,9.5-3.9l188.2-187.5c24.7-24.7,38.3-57.5,38.3-92.4
+				            C471.801,124.501,458.301,91.701,433.601,67.001z"/>
+				    </g>
+				</svg>
+			    <span id="likeCount" th:text="${r.likes != null ? r.likes : 0}"></span>
+			</button>
+	        <p class="title" th:text="${r.title}"></p>
+			<div class="rating">
+				<span th:each="i : ${#numbers.sequence(1, 5)}">
+			        <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" 
+			             th:style="'fill:' + (${i} <= ${r.rating} ? 'gold' : 'lightgray')">
+			            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.86L12 17.77 6.82 21l1.18-6.86-5-4.87 6.91-1L12 2z"/>
+			        </svg>
+			    </span>
+			</div>
+			<div class="when">
+				<label>언제 다녀오셨나요?&nbsp;</label>
+				<p class="tag" th:text="${r.when}"></p>
+			</div>
+			<div class="withWhom">
+				<label>누구와 함께 가셨나요?&nbsp;</label>
+				<p class="tag" th:text="${r.withWhom}"></p>
+			</div>
+	        <div class="images">
+	        	<img th:src="@{${r.thumnail}}" width="400px">
+	        	 <th:block th:each="image : ${imageUrls}">
+			        <img th:src="@{${image}}" width="400px" style="margin-right: 10px;">
+			    </th:block>
+	        </div>
+			<div class="content">
+				<p class="content" th:utext="${r.content}"></p>
+			</div>
+			<div id="buttons" class="button-container">
+				<th:block th:if="${session.loginUser != null && session.loginUser.userNo == r.userNo}">
+	                <button class="deleteModal" type="button" id="deleteModal">삭제</button>
+	            </th:block>
+				<button class="cancel-button" type="button" onclick="goBackAndRefresh();">목록</button>
+			</div>
+		</form>
+    </div>
+</main>   
+<div th:replace="~{common/footer.html :: foot}"></div>
+<div class="modal fade" tabindex="-1" role="dialog" id="modalChoice">
+    <div class="modal-dialog modal-dialog-centered" role="document"> <!-- ✅ 중앙 정렬 클래스 추가 -->
+        <div class="modal-content rounded-3 shadow">
+            <div class="modal-body p-4 text-center">
+                <h3 class="mb-0">정말 삭제하시겠습니까?</h3>
+                <p class="mb-0">삭제된 리뷰는 되돌릴 수 없습니다.</p>
+            </div>
+            <div class="buttons">
+				<button type="button" class="yes-button" id="yes-button">
+					<strong>네</strong>
+				</button>
+				<button type="button" class="no-button" id="no-button"
+					data-bs-dismiss="modal">아니오</button>
+			</div>
+        </div>
+    </div>
+</div>
+<script th:inline="javascript">
+	function goBackAndRefresh() {
+	    const backUrl = '/review/list';
+	    window.location.href = backUrl + (backUrl.includes('?') ? '&' : '?') + 'refresh=true';
+	}
+	
+	document.addEventListener("DOMContentLoaded", function() {
+	    const likeBtn = document.getElementById("likeBtn");
+	    const likeCount = document.getElementById("likeCount");
+	    const userNo = document.getElementById("userNo").value;
+	    
+	    
+	
+	    likeBtn.addEventListener("click", function(event) {
+	        if (!userNo) { // ✅ 로그인 여부 확인
+	            alert("좋아요를 누르려면 로그인이 필요합니다.");
+	            return;
+	        }
+	
+	        $.ajax({
+	            url: "/review/likes", 
+	            type: "POST",
+	            contentType: "application/x-www-form-urlencoded",
+	            data: { 
+	                reviewNo: /*[[${r.reviewNo}]]*/ 1, 
+	                userNo: /*[[${session.loginUser.userNo}]]*/1
+	            },
+	            success: function(response) {
+	                // 좋아요 개수 업데이트
+	                $("#likeCount").text(response.likes);
+
+	                // 좋아요 상태 확인 및 하트 색상 변경
+	                if (response.isLiked) {  
+	                    // 좋아요가 눌린 상태 - 빨간 하트 보여주기
+	                    $("#heart-outline").hide();
+	                    $("#heart-fill").show();
+	                } else {
+	                    // 좋아요가 눌리지 않은 상태 - 빈 하트 보여주기
+	                    $("#heart-fill").hide();
+	                    $("#heart-outline").show();
+	                }
+	            },
+	            error: function(xhr) {
+	                console.log("에러 상태 코드:", xhr.status);
+	                console.log("서버 응답:", xhr.responseText);
+	                alert("좋아요 처리 중 오류가 발생했습니다.\n" + xhr.responseText);
+	            }
+	        });
+	        event.preventDefault();
+	    });
+	});
+	
+	window.addEventListener('load', () => {
+        const form = document.getElementById('detailForm');
+        const deleteButton = document.getElementById('deleteModal'); // 삭제 버튼
+        const deleteConfirm = document.getElementById('yes-button'); // 삭제 확인 버튼
+        const deleteModal = document.getElementById('modalChoice'); // 삭제 모달
+        const closeModalButtons = document.querySelectorAll("[data-bs-dismiss='modal']"); // 취소 버튼들
+
+        // 🔹 삭제 버튼 클릭 시 모달 표시
+        if (deleteButton) {
+            deleteButton.addEventListener('click', () => {
+                deleteModal.style.display = "flex"; // 모달 보이기
+            });
+        }
+
+        // 🔹 모달 내 취소 버튼 클릭 시 닫기
+        closeModalButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                deleteModal.style.display = "none"; // 모달 숨기기
+            });
+        });
+
+        // 🔹 모달 외부 클릭 시 닫기
+        window.addEventListener("click", (event) => {
+            if (event.target === deleteModal) {
+                deleteModal.style.display = "none";
+            }
+        });
+
+        // 🔹 삭제 확인 버튼 클릭 시 폼 제출 (게시글 삭제)
+        if (deleteConfirm) {
+            deleteConfirm.addEventListener("click", () => {
+                form.action = '/review/delete';
+                form.submit();
+            });
+        }
+        
+        
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,17 @@
+@startuml
+actor User
+participant "JavaScript (fetch: /schedule/saveDetail)" as JS
+participant "AjaxController" as Controller
+participant "ScheduleService" as Service
+database "DB" as DB
+
+User -> JS : 클릭 이벤트 발생 (저장)
+JS -> Controller : POST /schedule/saveDetail (tripNo, datas)
+Controller -> Controller : 날짜 포맷 변환 (placeMap, memoMap)
+Controller -> Controller : Detail 리스트 생성
+Controller -> Service : saveDetails(detailList, placeMap, memoMap)
+Service -> DB : Detail, Memo, Place 데이터 저장
+Service --> Controller : 저장 완료 메시지
+Controller --> JS : 저장 완료 메시지 반환
+JS -> User : alert(message) + 상세 페이지 이동
+@enduml

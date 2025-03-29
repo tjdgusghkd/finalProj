@@ -1,0 +1,303 @@
+@startuml 관리자 대시보드 시퀀스 다이어그램
+
+actor Client
+participant "AdminController" as Controller
+participant "AdminService" as Service
+participant "AdminMapper" as Mapper
+database "Database" as DB
+
+' 회원 목록 조회
+Client -> Controller: GET /admin/members
+activate Controller
+Controller -> Service: userListCount(keyword)
+activate Service
+Service -> Mapper: userListCount(keyword)
+activate Mapper
+Mapper -> DB: SELECT count(*) FROM users WHERE...
+DB --> Mapper: 결과 반환
+Mapper --> Service: 결과 반환
+deactivate Mapper
+Service --> Controller: 결과 반환
+deactivate Service
+
+Controller -> Service: selectUserList(pi, keyword, order)
+activate Service
+Service -> Mapper: selectUserList(list, rowBounds)
+activate Mapper
+Mapper -> DB: SELECT user_no, name, ... FROM users WHERE...
+DB --> Mapper: 결과 반환
+Mapper --> Service: 결과 반환
+deactivate Mapper
+Service --> Controller: 결과 반환
+deactivate Service
+
+Controller --> Client: 회원 목록 페이지 렌더링
+deactivate Controller
+
+' 회원 상태 업데이트
+Client -> Controller: POST /admin/memberUpdate
+activate Controller
+Controller -> Service: updateMember(user)
+activate Service
+Service -> Mapper: updateMember(user)
+activate Mapper
+Mapper -> DB: UPDATE users SET status = ? WHERE user_no = ?
+DB --> Mapper: 결과 반환
+Mapper --> Service: 결과 반환
+deactivate Mapper
+Service --> Controller: 결과 반환
+deactivate Service
+Controller --> Client: 성공/실패 응답
+deactivate Controller
+
+' 공지사항 목록 조회
+Client -> Controller: GET /admin/notice
+activate Controller
+Controller -> Service: noticeCount()
+activate Service
+Service -> Mapper: noticeCount()
+activate Mapper
+Mapper -> DB: SELECT count(*) FROM notice WHERE status = 'Y'
+DB --> Mapper: 결과 반환
+Mapper --> Service: 결과 반환
+deactivate Mapper
+Service --> Controller: 결과 반환
+deactivate Service
+
+Controller -> Service: selectNoticeList(pi)
+activate Service
+Service -> Mapper: selectNoticeList(map, rowBounds)
+activate Mapper
+Mapper -> DB: SELECT * FROM notice ORDER BY...
+DB --> Mapper: 결과 반환
+Mapper --> Service: 결과 반환
+deactivate Mapper
+Service --> Controller: 결과 반환
+deactivate Service
+
+Controller --> Client: 공지사항 목록 페이지 렌더링
+deactivate Controller
+
+' 공지사항 상세 조회
+Client -> Controller: GET /admin/detail/{id}/{page}
+activate Controller
+Controller -> Service: selectNotice(noticeNo)
+activate Service
+Service -> Mapper: selectNotice(noticeNo)
+activate Mapper
+Mapper -> DB: SELECT * FROM notice WHERE notice_no = ?
+DB --> Mapper: 결과 반환
+Mapper --> Service: 결과 반환
+deactivate Mapper
+
+Service -> Mapper: updateViews(noticeNo)
+activate Mapper
+Mapper -> DB: UPDATE notice SET views = views + 1 WHERE...
+DB --> Mapper: 결과 반환
+Mapper --> Service: 결과 반환
+deactivate Mapper
+
+Service --> Controller: 공지사항 정보 반환
+deactivate Service
+Controller --> Client: 공지사항 상세 페이지 렌더링
+deactivate Controller
+
+' 공지사항 작성
+Client -> Controller: GET /admin/noticeWrite
+activate Controller
+Controller --> Client: 공지사항 작성 페이지 렌더링
+deactivate Controller
+
+Client -> Controller: POST /admin/noticeWrite
+activate Controller
+Controller -> Service: insertNotice(notice)
+activate Service
+Service -> Mapper: insertNotice(notice)
+activate Mapper
+Mapper -> DB: INSERT INTO notice VALUES...
+DB --> Mapper: 결과 반환
+Mapper --> Service: 결과 반환
+deactivate Mapper
+Service --> Controller: 결과 반환
+deactivate Service
+Controller --> Client: 공지사항 목록 페이지로 리다이렉트
+deactivate Controller
+
+' 공지사항 수정
+Client -> Controller: GET /admin/noticeEdit/{id}
+activate Controller
+Controller -> Service: selectNotice(noticeNo)
+activate Service
+Service -> Mapper: selectNotice(noticeNo)
+activate Mapper
+Mapper -> DB: SELECT * FROM notice WHERE notice_no = ?
+DB --> Mapper: 결과 반환
+Mapper --> Service: 결과 반환
+deactivate Mapper
+Service --> Controller: 공지사항 정보 반환
+deactivate Service
+Controller --> Client: 공지사항 수정 페이지 렌더링
+deactivate Controller
+
+Client -> Controller: POST /admin/noticeEdit/{id}
+activate Controller
+Controller -> Service: updateNotice(notice)
+activate Service
+Service -> Mapper: updateNotice(notice)
+activate Mapper
+Mapper -> DB: UPDATE notice SET title = ?, content = ?, ...
+DB --> Mapper: 결과 반환
+Mapper --> Service: 결과 반환
+deactivate Mapper
+Service --> Controller: 결과 반환
+deactivate Service
+Controller --> Client: 성공/실패 응답
+deactivate Controller
+
+' 신고 관리
+Client -> Controller: GET /admin/report
+activate Controller
+Controller -> Service: reportListCount()
+activate Service
+Service -> Mapper: reportListCount()
+activate Mapper
+Mapper -> DB: SELECT count(*) FROM report
+DB --> Mapper: 결과 반환
+Mapper --> Service: 결과 반환
+deactivate Mapper
+Service --> Controller: 결과 반환
+deactivate Service
+
+Controller -> Service: selectReportList(pi, keyword, order)
+activate Service
+Service -> Mapper: selectReportList(map, rowBounds)
+activate Mapper
+Mapper -> DB: SELECT * FROM report JOIN users... WHERE...
+DB --> Mapper: 결과 반환
+Mapper --> Service: 결과 반환
+deactivate Mapper
+Service --> Controller: 결과 반환
+deactivate Service
+
+Controller -> Service: totalWait()
+activate Service
+Service -> Mapper: totalWait()
+activate Mapper
+Mapper -> DB: SELECT count(*) FROM report WHERE report_status = 'W'
+DB --> Mapper: 결과 반환
+Mapper --> Service: 결과 반환
+deactivate Mapper
+Service --> Controller: 결과 반환
+deactivate Service
+
+Controller -> Service: totalAccept()
+activate Service
+Service -> Mapper: totalAccept()
+activate Mapper
+Mapper -> DB: SELECT count(*) FROM report WHERE report_status = 'A'
+DB --> Mapper: 결과 반환
+Mapper --> Service: 결과 반환
+deactivate Mapper
+Service --> Controller: 결과 반환
+deactivate Service
+
+Controller -> Service: totalReject()
+activate Service
+Service -> Mapper: totalReject()
+activate Mapper
+Mapper -> DB: SELECT count(*) FROM report WHERE report_status = 'R'
+DB --> Mapper: 결과 반환
+Mapper --> Service: 결과 반환
+deactivate Mapper
+Service --> Controller: 결과 반환
+deactivate Service
+
+Controller --> Client: 신고 관리 페이지 렌더링
+deactivate Controller
+
+' 신고 처리
+Client -> Controller: POST /admin/status
+activate Controller
+Controller -> Service: updateStatus(report)
+activate Service
+Service -> Mapper: updateStatus(report)
+activate Mapper
+Mapper -> DB: UPDATE report SET report_status = ? WHERE...
+DB --> Mapper: 결과 반환
+Mapper --> Service: 결과 반환
+deactivate Mapper
+
+alt 신고 승인(A)인 경우
+    Service -> Service: getReportDetail(reportNo)
+    Service -> Mapper: selectReportList(map, rowBounds)
+    activate Mapper
+    Mapper -> DB: SELECT * FROM report JOIN users... WHERE...
+    DB --> Mapper: 결과 반환
+    Mapper --> Service: 결과 반환
+    deactivate Mapper
+
+    alt 게시글(C) 신고인 경우
+        Service -> Mapper: getCommNo(reportNo)
+        activate Mapper
+        Mapper -> DB: SELECT content_no FROM report WHERE...
+        DB --> Mapper: 결과 반환
+        Mapper --> Service: 결과 반환
+        deactivate Mapper
+
+        Service -> Mapper: deleteCommReport(commNo)
+        activate Mapper
+        Mapper -> DB: UPDATE comm SET status = 'N' WHERE...
+        DB --> Mapper: 결과 반환
+        Mapper --> Service: 결과 반환
+        deactivate Mapper
+    else 댓글(R) 신고인 경우
+        Service -> Mapper: getReplyNo(reportNo)
+        activate Mapper
+        Mapper -> DB: SELECT content_no FROM report WHERE...
+        DB --> Mapper: 결과 반환
+        Mapper --> Service: 결과 반환
+        deactivate Mapper
+
+        Service -> Mapper: deleteReplyReport(replyNo)
+        activate Mapper
+        Mapper -> DB: UPDATE reply SET status = 'N' WHERE...
+        DB --> Mapper: 결과 반환
+        Mapper --> Service: 결과 반환
+        deactivate Mapper
+    end
+end
+
+Service --> Controller: 결과 반환
+deactivate Service
+Controller --> Client: 성공/실패 응답
+deactivate Controller
+
+' 접속 통계
+Client -> Controller: GET /admin/Stats
+activate Controller
+Controller -> Service: userCount()
+activate Service
+Service -> Mapper: userCount()
+activate Mapper
+Mapper -> DB: SELECT TRUNC(visit_date) as visit_date, COUNT(*)...
+DB --> Mapper: 결과 반환
+Mapper --> Service: 결과 반환
+deactivate Mapper
+Service --> Controller: 결과 반환
+deactivate Service
+
+Controller -> Service: dailyUserCount()
+activate Service
+Service -> Mapper: dailyUserCount()
+activate Mapper
+Mapper -> DB: SELECT TO_CHAR(visit_date, 'DY'...
+DB --> Mapper: 결과 반환
+Mapper --> Service: 결과 반환
+deactivate Mapper
+Service --> Controller: 결과 반환
+deactivate Service
+
+Controller --> Client: 접속 통계 페이지 렌더링
+deactivate Controller
+
+@enduml

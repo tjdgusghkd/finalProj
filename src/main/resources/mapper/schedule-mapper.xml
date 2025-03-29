@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="com.hapla.schedule.model.mapper.ScheduleMapper">
+ 
+	 <insert id="saveTrip" parameterType="Trip">
+	 	<selectKey keyProperty="tripNo" resultType="int" order="BEFORE">
+	 		select seq_trip.NEXTVAL FROM DUAL
+	 	</selectKey>
+	 	
+	 	insert into trip
+	 	values(#{tripNo}, #{userNo},
+		default, #{startDate}, #{endDate}, sysdate, #{cityName})
+	 </insert>
+
+	<!-- 날짜 범위에 맞는 일정 조회 -->
+	<select id="selectScheduleByDateRange" resultType="Trip">
+	 <![CDATA[
+	 	select *
+	 	from trip
+	 	where date >= #{startDate} and date <= #{endDAte}
+	 ]]>
+	</select>
+
+	<select id="findTripByFields" resultType="Trip" parameterType="Trip">
+	    SELECT *
+	    FROM trip
+	    WHERE user_no = #{userNo}
+	      AND start_date = #{startDate}
+	      AND end_date = #{endDate}
+	      AND city_name = #{cityName}
+	</select>
+	
+	<select id="getMySchedule">
+		select *
+		from trip
+		where user_no = #{userNo}
+		order by
+		CREATE_DATE desc
+	</select>
+
+	 <select id="getTripDetail" parameterType="int" resultType="Detail">
+	    SELECT d.detail_no,
+	           d.trip_no,
+	           d.select_date,
+	           m.content,
+	           p.place_id
+	    FROM detail d
+	    LEFT JOIN detail_memo m ON d.detail_no = m.detail_no
+	    LEFT JOIN detail_place p ON d.detail_no = p.detail_no
+	    WHERE d.trip_no = #{tripNo}
+	    ORDER BY d.select_date
+	</select>
+
+	<select id="getTripNo">
+		select *
+		from trip
+		where trip_no = #{tripNo}
+	</select>
+
+	<!-- 이미 존재하는 tripNo 조회 -->
+	<select id="getTripNoByUser" resultType="int" parameterType="int">
+		select trip_no from trip where user_no = #{userNo} order by CREATE_DATE desc limit 1
+	</select>
+
+	<!-- 조회한 tripNo를 이용해서 detail 저장 -->
+	<insert id="saveDetail" parameterType="Detail">
+	    <selectKey resultType="int" keyProperty="detailNo" order="BEFORE">
+	        SELECT SEQ_DETAIL.NEXTVAL FROM DUAL
+	    </selectKey>
+	    INSERT INTO DETAIL (DETAIL_NO, TRIP_NO, SELECT_DATE)
+	    VALUES (#{detailNo}, #{tripNo}, #{selectDate})
+	</insert>
+
+	<insert id="insertMemo">
+		insert into detail_memo(detail_no, content)
+		values (#{detailNo}, #{content})
+	</insert>
+	
+	<insert id="insertPlace">
+		insert into detail_place(detail_no, place_id)
+		values (#{detailNo}, #{placeId})
+	</insert>
+		 
+	<select id="selectTripByTripNo" resultType="Trip">
+    	SELECT * FROM trip WHERE trip_no = #{tripNo}
+	</select>
+
+	<select id="selectDetailsByTripNo" resultType="Detail">
+    SELECT *
+	     FROM detail
+	     WHERE trip_no = #{tripNo}
+	     ORDER BY select_date
+	</select>
+	
+	<select id="selectMemosByTripNo" resultType="DetailMemo">
+	    SELECT dm.detail_no, dm.content
+	      FROM detail_memo dm
+	      JOIN detail d ON dm.detail_no = d.detail_no
+	     WHERE d.trip_no = #{tripNo}
+	</select>
+
+	<select id="selectPlacesByTripNo" resultType="DetailPlace">
+	    SELECT dp.detail_no, dp.place_id
+	      FROM detail_place dp
+	      JOIN detail d ON dp.detail_no = d.detail_no
+	     WHERE d.trip_no = #{tripNo}
+	</select>
+	
+	<delete id="deleteTrip" parameterType="int">
+		DELETE FROM trip WHERE trip_no = #{tripNo}
+	</delete>
+
+	<delete id="deletePlacesByDetailNo">
+	    DELETE FROM detail_place WHERE detail_no = #{detailNo}
+	</delete>
+	
+	<delete id="deleteMemosByDetailNo">
+	    DELETE FROM detail_memo WHERE detail_no = #{detailNo}
+	</delete>
+
+	<insert id="insertDetail" parameterType="Detail">
+    <selectKey keyProperty="detailNo" resultType="int" order="BEFORE">
+        SELECT SEQ_DETAIL.NEXTVAL FROM DUAL
+    </selectKey>
+	    INSERT INTO DETAIL (DETAIL_NO, TRIP_NO, SELECT_DATE)
+	    VALUES (#{detailNo}, #{tripNo}, #{selectDate})
+	</insert>
+
+	<select id="getPlaceIdsByDetailNo" resultType="string">
+	    SELECT PLACE_ID FROM DETAIL_PLACE WHERE DETAIL_NO = #{detailNo}
+	</select>
+	
+	<select id="getMemosByDetailNo" resultType="string">
+	    SELECT CONTENT FROM DETAIL_MEMO WHERE DETAIL_NO = #{detailNo}
+	</select>
+
+</mapper>

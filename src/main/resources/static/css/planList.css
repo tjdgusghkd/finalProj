@@ -1,0 +1,161 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    display: flex;
+    height: 100vh;
+    position: relative;
+}
+
+.sidebar {
+    width: 300px;
+    background: white;
+    /* border-right: 1px solid #e0e0e0; */
+    /* overflow-y: auto; */
+    position: relative;
+    z-index: 2;
+    margin: 1%;
+    margin-left: 1.5%;
+}
+
+.sidebar-head{
+	margin-bottom: 10%;
+}
+.menu{
+	cursor: pointer;
+
+}
+
+.title{
+	margin-left:1%;
+	padding: 1%;
+	vertical-align: super;
+	font-weight: bold;
+}
+
+.edit{
+	float:right;
+	cursor: pointer;
+}
+
+
+
+.date-container{
+	margin-bottom: 10%;
+	margin-top: 5%;
+	
+		
+}
+
+.plan-title{
+	margin-bottom: 3%;
+	font-weight: bold;
+}
+
+.date-list {
+    list-style: none;
+}
+	
+.date-item {
+    flex-direction: column;
+    gap: 5px;
+    padding: 6%;
+    border-radius: 15px; /* ✅ 모서리를 둥글게 */
+    border: 1px solid #e0e0e0; /* ✅ 테두리 추가 */
+    background: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* ✅ 부드러운 그림자 */
+    max-width: 100%; /* ✅ 최대 너비 제한 */
+}
+
+#date{
+	font-size: 15px;
+	vertical-align: super;
+	color: #8D8D8D;
+	
+}
+
+#location{
+	vertical-align: super;
+	font-size: 16px;
+	color: #8D8D8D;
+}
+
+.controls {
+    display: flex;
+    gap: 5px;
+    margin-left: auto;
+    padding: 1%;
+    display: none;
+}
+
+.control-btn {
+    width: 24px;
+    height: 24px;
+    border: 1px solid #e0e0e0;
+    border-radius: 50%;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    
+}
+
+
+.control-btn:hover {
+    background: #f5f5f5;
+}
+
+#map {
+    flex: 1;
+    height: 100%;
+}
+
+.empty-day {
+    color: #999;
+    font-size: 12px;
+}
+
+/* 사이드 패널 스타일 */
+#side-panel {
+    width: 300px;
+    height: 100%;
+    background: white;
+    position: absolute;
+    top: 0;
+    right: -300px;
+    transition: right 1s ease-in-out;
+    border-left: 1px solid #e0e0e0;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+}
+
+#side-panel.active {
+    left: 335px;
+}
+
+.side-panel-header {
+    padding: 15px;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+}
+
+.close-btn {
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.side-panel-content {
+    padding: 15px;
+    flex-grow: 1;
+    /* overflow-y: auto; */
+}

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hapla.comm.model.mapper.ReportMapper">
+   
+   <!-- 이미 신고한 게시글/댓글인지 확인 -->
+   <select id="checkAlreadyReported" resultType="java.lang.Integer">
+       select count(*)
+       from report
+       where report_category = #{reportCategory, jdbcType=VARCHAR}
+       and content_no = #{contentNo, jdbcType=INTEGER}
+       and reporter_no = #{reporterNo, jdbcType=INTEGER}
+   </select>
+   
+   <!-- 게시글/댓글 작성자 번호 가져오기 -->
+   <select id="getViolatorNo" resultType="java.lang.Integer">
+       <choose>
+           <when test='reportCategory != null and reportCategory.equals("C")'>
+               select user_no
+               from comm
+               where comm_no = #{contentNo, jdbcType=INTEGER}
+               and status = 'Y'
+           </when>
+           <when test='reportCategory != null and reportCategory.equals("R")'>
+               select user_no
+               from reply
+               where reply_no = #{contentNo, jdbcType=INTEGER}
+               and status = 'Y'
+           </when>
+           <otherwise>
+               select null from dual
+           </otherwise>
+       </choose>
+   </select>
+   
+   <!-- 신고 저장 -->
+   <insert id="insertReport" parameterType="com.hapla.admin.model.vo.Report">
+       insert into report(
+           report_no,
+           report_title,
+           report_content,
+           reporter_no,
+           violator_no,
+           report_status,
+           report_category,
+           content_no,
+           create_date
+       ) values (
+           seq_report.nextval,
+           #{reportTitle, jdbcType=VARCHAR},
+           #{reportContent, jdbcType=VARCHAR},
+           #{reporterNo, jdbcType=INTEGER},
+           #{violatorNo, jdbcType=INTEGER},
+           #{reportStatus, jdbcType=VARCHAR},
+           #{reportCategory, jdbcType=VARCHAR},
+           #{contentNo, jdbcType=INTEGER},
+           sysdate
+       )
+   </insert>
+   
+   <!-- 게시글/댓글의 총 신고 횟수 -->
+   <select id="getReportCount" resultType="java.lang.Integer">
+       select COUNT(*)
+       from report
+       where report_category = #{reportCategory, jdbcType=VARCHAR}
+       and content_no = #{contentNo, jdbcType=INTEGER}
+   </select>
+   
+   
+   <!-- 신고된 게시글 조회 - 수정 -->
+   <select id="getReportedComm" resultType="java.util.HashMap">
+       select 
+           NVL(c.comm_no, 0) as "commNo",
+           NVL(c.title, '') as "title",
+           NVL(u.name, '') as "name",
+           TO_CHAR(c.create_date, 'YYYY-MM-DD HH24:MI:SS') as "createDate",
+           c.comm_content as "commContent"
+       from 
+           comm c
+       left join 
+           users u ON c.user_no = u.user_no
+       where 
+           c.comm_no = #{contentNo, jdbcType=INTEGER}
+       and 
+           c.status = 'Y'
+   </select>
+   
+   <!-- 신고된 댓글 조회 - 수정 -->
+   <select id="getReportedReply" resultType="java.util.HashMap">
+       select 
+           NVL(r.reply_no, 0) as "replyNo",
+           NVL(r.comm_no, 0) as "commNo",
+           NVL(u.name, '') as "name",
+           TO_CHAR(r.create_date, 'YYYY-MM-DD HH24:MI:SS') as "createDate",
+           r.reply_content as "replyContent"
+       from 
+           reply r
+       left join 
+           users u ON r.user_no = u.user_no
+       where 
+           r.reply_no = #{contentNo, jdbcType=INTEGER}
+       and 
+           r.status = 'Y'
+   </select>
+   
+   <!-- 게시글 정보 조회 - 수정 -->
+   <select id="getCommInfo" resultType="java.util.HashMap">
+       select 
+           NVL(comm_no, 0) as "commNo",
+           NVL(title, '') as "title"
+       from 
+           comm
+       where 
+           comm_no = #{commNo, jdbcType=INTEGER}
+       and 
+           status = 'Y'
+   </select>
+</mapper>
+

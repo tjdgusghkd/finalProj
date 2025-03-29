@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>여행 일정</title>
+    <link rel="stylesheet" href="/css/scheduleDetail.css" type="text/css">
+</head>
+<body>
+	<input type="hidden" id="tripNo" name="tripNo" th:value="${trip.tripNo}">
+	<input type="hidden" id="tripNo" name="detailNo" th:value="${detail.detailNo}">
+    <div class="container">
+        <!-- 🌍 왼쪽 사이드바 -->
+        <div class="sidebar">
+<!--         	<div class="hapla-logo" onclick="location.href='/main'">HAPLA</div> -->
+            <div class="sidebar-head">
+                <span class="menu" id="menuBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path d="M 3 5 A 1.0001 1.0001 0 1 0 3 7 L 21 7 A 1.0001 1.0001 0 1 0 21 5 L 3 5 z M 3 11 A 1.0001 1.0001 0 1 0 3 13 L 21 13 A 1.0001 1.0001 0 1 0 21 11 L 3 11 z M 3 17 A 1.0001 1.0001 0 1 0 3 19 L 21 19 A 1.0001 1.0001 0 1 0 21 17 L 3 17 z"></path>
+                    </svg>
+                </span>
+                <span class="edit" id="editBtn">
+                	<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px">
+                		<path d="M240-400q-33 0-56.5-23.5T160-480q0-33 23.5-56.5T240-560q33 0 56.5 23.5T320-480q0 33-23.5 56.5T240-400Zm240 0q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm240 0q-33 0-56.5-23.5T640-480q0-33 23.5-56.5T720-560q33 0 56.5 23.5T800-480q0 33-23.5 56.5T720-400Z"/>
+                	</svg>
+                	<!-- 🔽 말풍선 메뉴 (처음엔 숨김) -->
+				     <div class="edit-menu" id="editMenu" th:data-id="${trip.tripNo}">
+                        <div class="edit-option" th:onclick="|onEdit(${trip.tripNo})|">✏️ 수정</div>
+                        <div class="edit-option" th:onclick="|onDelete(${trip.tripNo})|">🗑 삭제</div>
+                    </div>
+                </span>
+            </div>
+            <div class="trip_detail">
+            
+	            <div class="sidebar-title" th:each=" trip : ${trip}" th:data-id="${trip.tripNo}">
+	                <span class="trip-title" id="tripTitle" th:data-city="${trip.cityName}" th:text="${trip.cityName}"></span>
+	                <span id="tripDates" th:text="${#dates.format(trip.startDate, 'yyyy.MM.dd')} + '~' + ${#dates.format(trip.endDate, 'yyyy.MM.dd')}"></span>
+				</div>
+	            <!-- ✅ 날짜별 일정 리스트 -->
+	            <div class="date-list" id="dateList"></div>
+            </div>
+        </div>
+		<!-- 오른쪽 사이드 패널 -->
+	<div id="side-panel">
+		<div class="side-panel-header">
+			추가 정보 <span class="close-btn">&times;</span>
+		</div>
+		<div class="side-panel-content">여기에 추가 정보를 입력하세요.</div>
+	</div>
+        <!-- 🌍 Google 지도 -->
+        <div id="map"></div>
+    </div>
+
+    <script src="/js/scheduleDetail.js"></script>
+    
+    <!-- Google Maps API -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAUKMdSgSqvtUy4wZvUxqA6I_c0Zk4InEU&libraries=places&callback=initMap"></script>
+    
+
+</body>
+<script th:inline="javascript">
+/*<![CDATA[*/
+	window.trip = /*[[${trip}]]*/null;
+	window.detailList = /*[[${detailList}]]*/ [];
+/*]]>*/
+</script>
+</html>

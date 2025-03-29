@@ -1,0 +1,229 @@
+/* /* 🌍 전체 컨테이너 flex 설정 */
+body, .container {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+} */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    display: flex;
+    height: 100vh;
+    position: relative;
+}
+
+/* 🌍 오른쪽 Google 지도 */
+#map {
+    flex: 1;
+    height: 100vh;
+}
+/* 🌍 왼쪽 사이드바 */
+/* .sidebar {
+    width: 20%;
+    background: white;
+    padding: 15px;
+    border-right: 1px solid #ddd;
+    overflow-y: auto;
+} */
+.sidebar {
+    position: fixed; /* 사이드바를 왼쪽 고정 */
+    left: 0;
+    top: 0;
+    width: 20%; /* 사이드바 너비 */
+    height: 100%;
+    background: white;
+    padding: 15px;
+    border-right: 1px solid #ddd;
+    overflow-y: auto;
+    z-index: 1000; /* 사이드바가 위에 오도록 설정 */
+}
+/* 스크롤바의 전체 영역 */
+.sidebar::-webkit-scrollbar {
+    width: 8px; /* 세로 스크롤바의 너비 */
+}
+
+/* 스크롤바의 막대 영역 */
+.sidebar::-webkit-scrollbar-thumb {
+    background-color: #ffffff; /* 스크롤바 색상 */
+    border-radius: 4px; /* 스크롤바 막대의 둥근 모서리 */
+}
+
+/* 스크롤바의 트랙(배경) 영역 */
+.sidebar::-webkit-scrollbar-track {
+    background: #ffffff; /* 스크롤바 배경 색상 */
+    /* border-radius: 10px; 스크롤바 배경의 둥근 모서리 */
+}
+
+
+.sidebar-head{
+	display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.hapla-logo {
+    font-weight: bold;
+    color: #0099cc;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+.sidebar-title{
+	margin-top: 5%;
+}
+
+.trip-title{
+	font-size: 20px;
+	font-weight: bold;
+
+}
+
+.menu{
+	cursor: pointer;
+}
+
+.edit{
+	cursor: pointer;
+	padding: 4px;
+}
+
+.edit-menu {
+    position: absolute;
+    right: 0;
+    top: 28px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    display: none; /* 처음에는 숨김 */
+    z-index: 999;
+    min-width: 100px;
+    padding: 6px 0;
+}
+
+.edit-option {
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #333;
+    transition: background-color 0.2s;
+}
+
+.edit-option:hover {
+    background-color: #f2f2f2;
+    color: #0077cc;
+}
+
+#tripDates{
+	display: flex;
+    width: 100%;
+    margin-top: 3%;
+    margin-bottom: 10%;
+}
+
+/* 📅 여행 일정 리스트 스타일 */
+.date-list {
+    margin-top: 15px;
+    list-style: none;
+}
+
+.date-container {
+    margin-bottom: 10%;
+	margin-top: 5%;
+	curesor: pointer;
+}
+
+ 
+/*  /* ✅ 날짜별 컨테이너 */ */
+/* .date-container { */
+/*     border: 1px solid #ddd; */
+/*     border-radius: 12px; */
+/*     padding: 16px; */
+/*     margin-bottom: 12px; */
+/*     background-color: #fafafa; */
+/*     box-shadow: 0 2px 6px rgba(0,0,0,0.05); */
+/*     transition: background-color 0.3s ease; */
+/* }
+
+.date-container:hover {
+    background-color: #f0f8ff;
+}
+ */
+ 
+.plan-title {
+    /* font-weight: bold; */
+    margin-bottom: 3%;
+}
+
+.date-item {
+    flex-direction: column;
+    gap: 5px;
+    padding: 6%;
+    border-radius: 15px; /* ✅ 모서리를 둥글게 */
+    border: 1px solid #e0e0e0; /* ✅ 테두리 추가 */
+    background: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* ✅ 부드러운 그림자 */
+    max-width: 100%; /* ✅ 최대 너비 제한 */
+    display: grid;
+    flex-direction: row;
+    margin-top: 3%;
+}
+
+.plan-date {
+    font-weight: bold;
+    color: #34495e;
+    margin-bottom: 8px;
+    font-size: 16px;
+}
+
+.plan-content div {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #555;
+}
+
+.plan-content strong {
+    color: #2c87f0;
+}
+
+/* 📍 장소 & 메모 내용 */
+.plan-content div {
+    font-size: 14px;
+    color: #333;
+    margin: 4px 0;
+    line-height: 1.5;
+}
+
+/* ✨ 강조 표시용 strong */
+.plan-content strong {
+    color: #0077cc;
+    font-weight: 600;
+}
+
+ /* 사이드 패널 스타일 */
+ .side-panel {
+    position: fixed;
+    /* position: absolute; */
+    left: 21.6%; /* 사이드바 옆에 붙이기 */
+    top: 0;
+    width: 300px;
+    height: 100%;
+    background: white;
+    box-shadow: -2px 0px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    flex-direction: column;
+    z-index: 1000; /* 사이드바보다 위로 설정 */
+    display: none; /* 처음에는 숨김 */
+}
+
+.hidden {
+    display: none;
+}

@@ -1,0 +1,23 @@
+@startuml
+actor User
+participant Browser
+participant ReviewAjaxController
+participant ReviewService
+participant CommService
+participant Database
+
+== 리뷰 좋아요 기능 ==
+User -> Browser : 좋아요 버튼 클릭
+Browser -> ReviewAjaxController : POST /review/likes (reviewNo, userNo)
+ReviewAjaxController -> ReviewService : checkUserLike(userNo, reviewNo)
+ReviewService -> Database : 좋아요 여부 확인
+Database --> ReviewService : 확인 결과 반환
+alt 이미 좋아요 상태일 때
+    ReviewService -> Database : removeLike(userNo, reviewNo)
+else 좋아요하지 않은 상태일 때
+    ReviewService -> Database : addLike(userNo, reviewNo)
+end
+ReviewService -> ReviewAjaxController : 좋아요 개수 반환
+ReviewAjaxController -> Browser : 좋아요 결과 반환 (JSON)
+Browser -> User : 좋아요 버튼 상태 갱신
+@enduml

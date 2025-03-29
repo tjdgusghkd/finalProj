@@ -1,0 +1,413 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#login{
+    cursor: pointer;
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.hapla-logo {
+    font-weight: bold;
+    color: #0099cc;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #333;
+}
+
+.user-section {
+    position: relative;
+}
+
+.user-profile {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.header-dropdown {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-radius: 4px;
+    min-width: 200px;
+    display: none;
+    z-index: 100;
+    text-align: left;
+}
+
+.header-dropdown.active {
+    display: block;
+}
+
+.header-dropdown a {
+    display: block;
+    padding: 0.8rem 1rem;
+    text-decoration: none;
+    color: #333;
+}
+
+.header-dropdown a:hover {
+    background: #f5f5f5;
+    cursor: pointer;
+}
+
+.header-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 100;
+}
+.header-modal-div{
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    margin-top: 200px;
+}
+.hidden {
+    display: none;
+}
+.header-banner {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #0099cc;
+}
+.header-modal-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.header-modal-label {
+    margin-bottom: 5px;
+    color: #555;
+}
+.header-modal-input {
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+.header-modal-button {
+    background-color: #0099cc;
+    color: white;
+    border: none;
+    padding: 0.75rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.2s;
+}
+.header-modal-button:hover {
+    background-color: #0088cc;
+}
+
+.login-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #0099cc;
+}
+
+.login-subtitle {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 32px;
+}
+
+.login-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 20px;
+    }
+}
+
+/* Close button styles */
+.header-close-btn {
+    position: relative;
+    top: -30px;
+    left: 50%;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+.header-close-btn::before,
+.header-close-btn::after {
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 24px;
+    background-color: #999;
+    top: 0;
+    left: 50%;
+}
+
+.header-close-btn::before {
+    transform: rotate(45deg);
+}
+
+.header-close-btn::after {
+    transform: rotate(-45deg);
+}
+
+.header-close-btn:hover::before,
+.header-close-btn:hover::after {
+    background-color: #333;
+}
+
+.profile-image-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.profile-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 1rem;
+    border: 3px solid #f0f0f0;
+}
+
+.image-upload-btn {
+    background-color: #0099cc;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+}
+
+.image-upload-btn:hover {
+    background-color: #0088cc;
+}
+
+.delete-account-btn {
+    background-color: white;
+    color: #dc3545;
+    border: 1px solid #dc3545;
+    padding: 0.75rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    width: 100%;
+    margin-top: 1rem;
+    transition: all 0.2s;
+}
+
+.delete-account-btn:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+#kakao-login-btn {
+    background-color: #FEE500;
+    border: none;
+    /*padding: 12px;*/
+    color: #000000;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 12px;
+    border-radius: 6px;
+}
+
+.header-modal-trip{
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width:40%;
+    max-width: 700px;
+    min-height: 250px;
+    margin-top: 200px;
+   	max-width: 700px;
+    min-height: 250px;
+}
+
+/* 버튼 컨테이너 */
+.button-container{
+	display:flex;
+	flex-direction: row;
+	gap:15px;	
+}
+
+/* 큰 버튼 스타일 */
+.trip-button{
+	flex: 1;
+	text-align: center;
+}
+
+.planList, .makePlan{
+	width: 100%;
+    height: 300%;
+    padding: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+    background-color: #ffffff;
+    color: #0099cc;
+    border-radius: 10px;
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+
+.planList:hover, .makePlan:hover{
+	 border-radius: 20px;
+	 background-color: #0099cc;
+	 color: #ffffff;
+}
+
+/* 모달 창 */
+.modal-content {
+    position: relative;
+    padding: 20px;
+    width: 100%;
+    margin: auto;
+}
+
+/* 닫기 버튼 */
+.close {
+    position: absolute;
+    top: 1%;
+    right: 1%; 
+    cursor: pointer;
+}
+
+/* 검색창 스타일 */
+.search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 30px;
+    padding: 10px;
+    margin-bottom: 10px;
+    height: 50px;
+}
+
+/* 검색 입력창 */
+/* #searchInput {
+    width: 80%;
+    padding: 10px;
+    font-size: 16px;
+    margin-bottom: 10px;
+} */
+
+.search-container input {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    padding: 10px;
+}
+
+.search-icon {
+    position: absolute;
+    right: 15px;
+    top: 11px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+/* 도시 목록 스타일 
+#cityList {
+    list-style-type: none;
+    padding: 0;
+    max-height: 250px;
+    overflow-y: auto;
+} */
+
+.pac-container {
+    display: none !important;
+}
+
+/* 🏙️ 검색 결과 스타일 */
+#cityList {
+    list-style: none;
+    padding: 0;
+    max-height: 300px;
+    overflow-y: auto;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+#cityList li {
+    padding: 10px;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+#cityList li:hover {
+    background: #f9f9f9;
+}
+
+/* 아이콘 */
+.city-icon {
+    margin-right: 10px;
+    font-size: 16px;
+    color: #5a97c7;
+}
+
+/* 🌍 국가 이름 스타일 */
+.country-name {
+    font-size: 14px;
+    color: gray;
+}

@@ -1,0 +1,20 @@
+@startuml
+actor User
+participant "Browser" as JS
+participant "ScheduleController" as Controller
+participant "ScheduleService" as Service
+database "DB" as DB
+
+User -> JS : "삭제" 버튼 클릭
+JS -> Controller : GET /schedule/delete/{tripNo}
+Controller -> Service : deleteTrip(tripNo)
+
+Service -> DB : DELETE FROM Detail WHERE tripNo = ?
+Service -> DB : DELETE FROM DetailMemo WHERE tripNo = ?
+Service -> DB : DELETE FROM DetailPlace WHERE tripNo = ?
+Service -> DB : DELETE FROM Trip WHERE tripNo = ?
+
+Service --> Controller : 삭제 완료
+Controller --> JS : redirect:/schedule/list
+JS -> User : 일정 목록 페이지로 이동
+@enduml

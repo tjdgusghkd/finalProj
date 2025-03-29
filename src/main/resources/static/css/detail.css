@@ -1,0 +1,397 @@
+/* 🌟 기본 스타일 */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background-color: #f9f9f9;
+}
+
+/* 🌟 헤더 스타일 */
+header {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 🌟 배너 스타일 */
+.banner {
+    position: relative;
+    color: white;
+    padding: 50px 20px;
+    text-align: center;
+}
+
+.banner img {
+    width: 100%;
+    height: auto;
+}
+
+.banner .overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+}
+
+.banner input {
+    padding: 10px;
+    width: 50%;
+    margin-top: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+/* 🌟 커뮤니티 컨테이너 */
+.community {
+    margin: 20px auto;
+    width: 80%;
+    background: #fff;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    border-radius: 8px;
+}
+
+/* 🌟 테이블 스타일 */
+.community table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.community th, 
+.community td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+/* 🌟 댓글 입력 창 */
+.input-group {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 🌟 댓글 입력창 스타일 */
+#replyContent {
+    flex-grow: 1;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: 2px solid #ddd;
+    background-color: #f9f9f9;
+    transition: all 0.3s ease-in-out;
+    font-family: 'Noto Sans KR', sans-serif;
+    color: #333;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 포커스 시 강조 */
+#replyContent:focus {
+	background-color: #fff;
+    outline: none;
+}
+
+/* 🌟 댓글 제출 버튼 */
+#replySubmit {
+    padding: 12px 18px;
+    font-size: 16px;
+    font-weight: bold;
+    background: linear-gradient(to right, #ff7e5f, #f76c6c);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+#replySubmit:hover {
+    background: linear-gradient(to right, #f76c6c, #ff5e62);
+    box-shadow: 0 4px 8px rgba(247, 108, 108, 0.3);
+}
+
+#replySubmit:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+
+.comments {
+    border-top: 2px solid #007bff;
+    padding-top: 10px;
+}
+
+/* 🌟 댓글 스타일 */
+.comment-box {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background: #fff;
+}
+
+.comment-button {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+.comment-button:hover {
+    background: #0056b3;
+}
+
+/* 🌟 기본적으로 숨겨진 모달 */
+.modal {
+    display: none; /* 🌟 기본적으로 숨김 */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* 배경 어둡게 */
+    z-index: 1050;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 🌟 모달이 활성화되었을 때 적용되는 스타일 */
+.modal.show {
+    display: flex; /* 🔹 show 클래스가 추가될 때만 모달 표시 */
+}
+
+/* 🌟 모달 내용 스타일 */
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    min-width: 300px;
+    text-align: center;
+}
+
+/* 🌟 모달 배경 z-index 조정 */
+.modal-backdrop {
+    z-index: 1040 !important;
+}
+
+.updel {
+    display: inline-block !important;
+    visibility: visible !important;
+    
+.comment-row {
+    background-color: #ffffff;
+}
+
+.replied-comment {
+    background-color: #f8f9fa;  /* 연한 회색 배경 */
+    border-left: 4px solid #007bff;  /* 왼쪽 파란색 줄 */
+    margin-left: 20px; /* 들여쓰기 */
+    padding-left: 10px;
+}
+}
+
+/* ✅ 버튼을 가로로 나란히 배치 */
+.buttons {
+    display: flex;
+    align-items: center; /* 버튼들을 세로 중앙 정렬 */
+    gap: 10px; /* 버튼 간격 */
+    margin-bottom: 10px;
+    justify-content: flex-end; /* 📌 버튼을 오른쪽 정렬 */
+}
+
+/* ✅ 좋아요 버튼 스타일 */
+#likeBtn {
+    display: flex; /* 내부 요소 정렬 */
+    align-items: center;
+    justify-content: center;
+    gap: 5px; /* 아이콘과 텍스트 간격 */
+    width: 90px; /* 📌 가로 길이 고정 */
+    height: 40px; /* 📌 버튼 높이 조정 */
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(to right, #ff7e5f, #f76c6c);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 2px 4px 10px rgba(255, 65, 108, 0.4);
+}
+
+/* ✅ 마우스 호버 시 */
+#likeBtn:hover {
+    background: linear-gradient(to right, #f76c6c, #ff5e62);
+    transform: scale(1.05);
+}
+
+/* ✅ 클릭 시 애니메이션 */
+#likeBtn:active {
+    transform: scale(0.95);
+    box-shadow: 1px 2px 5px rgba(255, 65, 108, 0.2);
+}
+
+/* ✅ 좋아요 카운트 스타일 */
+#likeCount {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+h2 {
+	margin-bottom: -50px;
+}
+
+.updateForm {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 90px; /* 📌 가로 길이 고정 */
+    height: 40px; /* 📌 버튼 높이 조정 */
+    padding: 10px 20px;
+    background: linear-gradient(to right, #ff7e5f, #f76c6c);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* ✅ 마우스 호버 시 */
+.updateForm:hover {
+    background: linear-gradient(to right, #f76c6c, #ff5e62);
+    box-shadow: 0 4px 8px rgba(247, 108, 108, 0.3);
+}
+
+.deleteModal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 90px; /* 📌 가로 길이 고정 */
+    height: 40px; /* 📌 버튼 높이 조정 */
+    padding: 10px 20px;
+    background: linear-gradient(to right, #ff7e5f, #f76c6c);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* ✅ 마우스 호버 시 */
+.deleteModal:hover {
+    background: linear-gradient(to right, #f76c6c, #ff5e62);
+    box-shadow: 0 4px 8px rgba(247, 108, 108, 0.3);
+}
+
+/* ✅ 목록 버튼 스타일 */
+.cancel-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 90px; /* 📌 가로 길이 고정 */
+    height: 40px; /* 📌 버튼 높이 조정 */
+    padding: 10px 20px;
+    background: linear-gradient(to right, #ff7e5f, #f76c6c);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* ✅ 마우스 호버 시 */
+.cancel-button:hover {
+    background: linear-gradient(to right, #f76c6c, #ff5e62);
+    box-shadow: 0 4px 8px rgba(247, 108, 108, 0.3);
+}
+
+.yes-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 90px; /* 📌 가로 길이 고정 */
+    height: 40px; /* 📌 버튼 높이 조정 */
+    padding: 10px 20px;
+    background: linear-gradient(to right, #ff7e5f, #f76c6c);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* ✅ 마우스 호버 시 */
+.yes-button:hover {
+    background: linear-gradient(to right, #f76c6c, #ff5e62);
+    box-shadow: 0 4px 8px rgba(247, 108, 108, 0.3);
+}
+
+.no-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 90px; /* 📌 가로 길이 고정 */
+    height: 40px; /* 📌 버튼 높이 조정 */
+    padding: 10px 20px;
+    background: linear-gradient(to right, #ff7e5f, #f76c6c);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* ✅ 마우스 호버 시 */
+.no-button:hover {
+    background: linear-gradient(to right, #f76c6c, #ff5e62);
+    box-shadow: 0 4px 8px rgba(247, 108, 108, 0.3);
+}
+
+/* ✅ community 섹션을 상대 위치로 설정 */
+.community {
+    position: relative; /* 📌 버튼의 절대 위치 지정이 이 태그를 기준으로 작동 */
+}
+
+.table {
+    width: 100%;
+    table-layout: fixed; /* 칼럼 너비가 강제로 고정되도록 설정 */
+    border-collapse: collapse;
+}
+
+/* 테이블의 각 셀 스타일 */
+.table th, .table td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    vertical-align: middle;
+    word-wrap: break-word;
+    text-align: left;
+}
+
+/* 칼럼 너비 설정 (퍼센트로 지정) */
+.table th:nth-child(1), .table td:nth-child(1) { width: 5%; }
+.table th:nth-child(2), .table td:nth-child(2) { width: 70%; }
+.table th:nth-child(3), .table td:nth-child(3) { width: 10%; }
+.table th:nth-child(4), .table td:nth-child(4) { width: 10%; }
+.table th:nth-child(5), .table td:nth-child(5) { width: 5%; }

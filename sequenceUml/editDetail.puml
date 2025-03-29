@@ -1,0 +1,25 @@
+@startuml
+actor User
+participant "JavaScript (fetch: /schedule/editDetail)" as JS
+participant "AjaxController" as Controller
+participant "ScheduleService" as Service
+database "DB" as DB
+
+User -> JS : 클릭 이벤트 발생 (수정)
+JS -> Controller : PUT /schedule/editDetail (detailList, placeMap, memoMap, tripNo)
+Controller -> Controller : 신규 detail 확인 및 생성
+alt 새 Detail인 경우
+    Controller -> Service : insertDetail(detail)
+    Service -> DB : INSERT Detail
+    Service --> Controller : 생성된 detailNo
+end
+Controller -> Service : deletePlacesByDetailNo(detailNo)
+Controller -> Service : deleteMemosByDetailNo(detailNo)
+Controller -> Service : getPlaceIdsByDetailNo(detailNo)
+Controller -> Service : getMemosByDetailNo(detailNo)
+Controller -> Service : insertPlace(detailNo, placeId) [중복 제외]
+Controller -> Service : insertMemo(detailNo, content) [중복 제외]
+Service --> Controller : 수정 완료
+Controller --> JS : 수정 완료 메시지 반환
+JS -> User : alert(message) + 상세 페이지 이동
+@enduml

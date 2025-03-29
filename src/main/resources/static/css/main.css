@@ -1,0 +1,78 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    
+}
+
+.popular-destinations {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.popular-destinations h2 {
+    margin-top: 20px;
+    width: 100%;
+    max-width: 80%;
+    text-align: left;
+}
+
+.destinations-grid {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    width: 100%;
+    padding: 0 10rem; /* 양옆에 2rem의 여백 추가 */
+    box-sizing: border-box; /* padding을 포함한 전체 너비 계산 */
+}
+
+.destination-card {
+    width: calc(25% - 1rem); /* 한 줄에 5개의 카드 */
+    min-width: 200px; /* 최소 너비 설정 */
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.destination-card:hover {
+    transform: translateY(-10px); /* 호버 시 카드가 살짝 떠오르는 효과 */
+}
+
+.destination-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+.destination-info {
+    padding: 1rem;
+}
+
+
+
+@media (max-width: 1024px) {
+    .destination-card {
+        width: calc(33.33% - 1rem); /* 화면이 중간 크기일 때 3개씩 표시 */
+    }
+}
+
+@media (max-width: 768px) {
+    .destination-card {
+        width: calc(50% - 1rem); /* 화면이 더 작을 때 2개씩 표시 */
+    }
+}
+
+@media (max-width: 480px) {
+    .destination-card {
+        width: 100%; /* 모바일에서는 1개씩 표시 */
+    }
+}

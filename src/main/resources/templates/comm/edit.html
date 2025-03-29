@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HAPLA 커뮤니티</title>
+<link href="/css/detail.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <div th:replace="~{common/header.html :: topbar}"></div>
+    <main>
+        <section class="banner">
+            <img src="/img/communityBanner.png" alt="커뮤니티 배너">
+            <div class="overlay">
+                <h1>여행의 설렘을 함께 나누는 공간에서 당신의 정보를 공유해보세요</h1>
+            </div>
+        </section>
+        <section class="community">
+            <form class="needs-validation" action="/comm/update" method="POST" id="updateForm">
+            	<input type="hidden" name="userNo" id="userNo" th:value="${session.loginUser != null ? session.loginUser.userNo : ''}">
+            	<input type="hidden" name="commNo" th:value="${c.commNo}">
+				<input type="hidden" name="page" th:value="${page}">
+                <table>
+                    <tr>
+                        <th>제목</th>
+                        <td colspan="3" width="400px">
+                        	<input type="text" class="form-control" id="title" name="title" th:value="${c != null ? c.title : '제목 없음'}" required>
+                        </td>
+                        
+                    </tr>
+                    <tr>
+                        <th width="50px">등록자</th>
+                        <td th:text="${c != null ? c.nickname : '등록자 없음'}"></td>
+                    </tr>
+                    <tr>
+                        <th width="50px">등록일</th>
+                        <td th:text="${c != null and c.createDate != null ? #dates.format(c.createDate, 'yyyy-MM-dd') : '날짜 없음'}"></td>
+                    </tr>
+                    <tr>
+                        <th>조회수</th>
+                        <td th:text="${c != null ? c.views : 0}"></td>
+                    </tr>
+                    <tr>
+					    <td colspan="9">
+							<textarea class="form-control" cols="165" rows="30" name="commContent" style="resize: none;">[[${c.commContent}]]</textarea>
+						</td>
+					</tr>
+                </table>
+                
+                <div class="buttons">
+                	<button class="updateForm" id="updateForm">수정</button>
+               		<button class="cancel-button" id="cancel-button" type="button" onclick="javascript:history.back();">취소</button>
+                </div>
+			 </form>
+        </section>
+    </main>
+    <div th:replace="~{common/footer.html :: foot}"></div>
+	
+	<script th:inline="javascript">
+		
+	</script>
+
+</body>
+</html>

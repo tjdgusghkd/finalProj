@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HAPLA Travel</title>
+    <link href="/css/main.css" rel="stylesheet" type="text/css">
+    <link href="/css/search.css" rel="stylesheet" type="text/css">
+    <link href="/css/header.css" rel="stylesheet" type="text/css">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<div th:replace="~{common/header.html :: topbar}"></div>
+<main>
+    <section th:replace="~{common/search.html :: search}"></section>
+    <hr>
+    
+    <section id="search-data">
+        <section id="search-all-data" class="popular-destinations">
+            <div style="min-height: 500px" th:if="${set == 'loginX'}">
+                <br/><br/><br/><br/>
+                <h1>로그인 시 즐겨찾기 목록이 조회됩니다.</h1>
+            </div>
+            <th:block th:if="${set != '전체' && set != 'loginX'}">
+                <div class="destinations-grid">
+                    <h2 th:text="${set}"></h2>
+                    <div class="destination-card" th:each="place : ${places}" th:attr="data-place-id=${place.place_id}, data-type=${place.types}">
+                        <img th:src="${place.photo_url}" th:alt="${place.name}">
+                        <div class="destination-info">
+                            <h3 th:text="${place.name}"></h3>
+                            <p class="rating" th:text="${place.rating != null ? '⭐' + place.rating : '⭐ 없음'}"></p>
+                            <p class="review-count" th:text="${place.reviews + ' 리뷰'}"></p>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+            <th:block th:if="${set == '전체'}">
+                <h2 th:text="${main_info.name + ' | 현재 기온 : ' + main_info.weather.temp_c + '°C | 날씨 : ' + main_info.weather.condition.text + ' | 습도 : ' + main_info.weather.humidity + '%'}"></h2><br>
+                <img th:src="${main_info.photo_url}" th:alt="${main_info.name}">
+                <p th:text="${main_info.description}"></p>
+                <div class="destinations-grid" th:each="category : ${categories}">
+                    <h2 th:text="${category == 'tourist_attraction' ? '여행지' : category == 'landmark' ? '관광명소' : category == 'lodging' ? '숙박' : '음식점'}"></h2>
+                    <div class="destination-card" th:each="place : ${categoryResults.__${category}__}" th:attr="data-place-id=${place.place_id}, data-type=${category}">
+                        <img th:src="${place.photo_url}" th:alt="${place.name}">
+                        <div class="destination-info">
+                            <h3 th:text="${place.name}"></h3>
+                            <p class="rating" th:text="${place.rating != null ? '⭐ ' + place.rating : '⭐ 없음'}"></p>
+                            <p class="review-count" th:text="${place.reviews + ' 리뷰'}"></p>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+        </section>
+    </section>
+</main>
+<div th:replace="~{common/footer.html :: foot}"></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const destinationCards = document.querySelectorAll('.destination-card');
+        destinationCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const placeId = card.getAttribute('data-place-id');
+                const type = card.getAttribute('data-type');
+                if (placeId && type) {
+                    const encodedPlaceId = encodeURIComponent(placeId);
+                    const encodedType = encodeURIComponent(type);
+                    window.location.href = `/detail/${encodedPlaceId}/${encodedType}`;
+                } else {
+                    console.error('Place ID or type is missing.');
+                }
+            });
+        });
+    });
+    
+    window.onbeforeunload = function () { 
+    	$('#loading').show();
+    	$('body').css({overflow:'hidden'});
+    }  //현재 페이지에서 다른 페이지로 넘어갈 때 표시해주는 기능
+    window.addEventListener('load', () =>{
+    	 $('#loading').hide();
+    	 $('body').css({overflow:'auto'});
+    });
+    
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hapla.users.model.mapper.UsersMapper">
+    <select id="checkUser">
+        select count(*) from users where token_id = #{tokenId}
+    </select>
+
+    <select id="login">
+        select * from users where token_id = #{tokenId} and type = #{type}
+    </select>
+
+    <insert id="join">
+        insert into users values(seq_users.nextval, #{name}, #{nickname}, #{email}, default, #{profile}, #{type}, default, #{tokenId}, default)
+    </insert>
+
+    <select id="checkNickname">
+        select count(*) from users where nickname = #{nickname}
+    </select>
+
+    <update id="updateUser">
+        update users set profile = #{profile}, nickname = #{nickname} where user_no = #{userNo}
+    </update>
+
+    <delete id="deleteUser">
+        delete from users where user_no = #{no}
+    </delete>
+
+    <select id="selectPlaceId">
+        select api_id from place where user_no = #{userNo}
+    </select>	
+	
+	<insert id="insertLog">
+<!-- 		insert into logs -->
+<!-- 		values(seq_logs.nextval, #{visitIp}, #{visitUserAgent}, sysdate,sysdate) -->
+<!-- 	</insert> -->
+
+insert into logs (logs_no, visit_ip, visit_useragent, visit_date, create_at)
+        values((SELECT NVL(MAX(logs_no), 0) + 1 FROM logs), #{visitIp}, #{visitUserAgent}, sysdate, sysdate)
+    </insert>
+
+	
+	<select id="selectAllLog" resultType="Dashboard">
+		select logs_no, visit_ip, visit_useragent, TO_CHAR(visit_date, 'YYYY-MM-DD') AS visit_date
+		from logs
+	</select>
+	
+	
+</mapper>

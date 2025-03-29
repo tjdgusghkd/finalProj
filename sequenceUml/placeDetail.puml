@@ -1,0 +1,53 @@
+@startuml
+actor User
+participant "Frontend (JS)" as Frontend
+participant "Backend (GoogleSearchController)" as Backend
+participant "PlaceService" as Service
+participant "Google Places API" as GoogleAPI
+
+== 장소 상세 정보 조회 ==
+User -> Backend: /detail/{place_id}/{type}
+Backend -> Service: getPlaceDetails(placeId)
+Service -> GoogleAPI: Place Details API 요청
+GoogleAPI --> Service: 장소 상세 정보 (JSON)
+Service --> Backend: Map<String, Object> placeDetails
+Backend -> Service: countStar(placeId)
+Service --> Backend: 즐겨찾기 수 (count)
+alt 로그인 상태 (loginUser != null)
+    Backend -> Service: checkPlace(userNo, placeId)
+    Service --> Backend: check (0: 미등록, 1: 등록)
+    Backend -> Backend: model.addAttribute("check", true/false)
+end
+Backend --> Frontend: /place-detail 페이지 (placeDetails, placeId, type, count, check)
+Frontend -> User: 장소 상세 페이지 렌더링
+
+== 즐겨찾기 추가/삭제 ==
+User -> Frontend: 'star' 버튼 클릭
+alt 로그인 안 됨 (userNo == 0)
+    Frontend -> User: alert("로그인 후 이용해 주세요")
+else 로그인 됨
+    Frontend -> Backend: POST /star (userNo, type, apiId)
+    Backend -> Service: checkPlace(place)
+    Service --> Backend: check (0: 미등록, 1: 등록)
+    alt 미등록 (check == 0)
+        Backend -> Service: insertPlace(place)
+        Service --> Backend: result (1: 성공)
+        Backend --> Frontend: "insert"
+        Frontend -> Frontend: count 증가, heart2.svg로 변경
+    else 등록됨 (check == 1)
+        Backend -> Service: deletePlace(place)
+        Service --> Backend: result (1: 성공)
+        Backend --> Frontend: "delete"
+        Frontend -> Frontend: count 감소, heart1.svg로 변경
+    else 오류
+        Backend --> Frontend: "fail"
+        Frontend -> User: alert("오류 발생")
+    end
+end
+Frontend -> User: UI 업데이트 (즐겨찾기 상태 반영)
+
+== Google Maps로 이동 ==
+User -> Frontend: 'goGoogleMap' 버튼 클릭
+Frontend -> User: location.href = Google Maps URL (place_id)
+
+@enduml

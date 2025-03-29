@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HAPLA 커뮤니티</title>
+    <link href="/css/write.css" rel="stylesheet" type="text/css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div th:replace="~{common/header.html :: topbar}"></div>
+<main>
+    <section class="banner">
+        <img src="/img/communityBanner.png" alt="커뮤니티 배너">
+        <div class="overlay">
+            <h1>여행의 설렘을 함께 나누는 공간 당신의 정보를 공유해보세요</h1>
+        </div>
+    </section>
+    <section class="editor-container">
+        <h2>커뮤니티</h2>
+        <div>
+        	<form class="needs-validation" action="/comm/insert" method="POST">
+        		<label for="category">카테고리 선택:</label>
+			    <select id="category" name="categoryNo" class="form-control" required>
+			        <option value="1">여행지</option>
+					<option value="2">항공권</option>
+					<option value="3">관광명소</option>
+					<option value="4">숙박</option>
+					<option value="5">음식점</option>
+			    </select>
+			    <br/>
+		        <input type="text" class="form-control" id="title" name="title" placeholder="제목을 입력하세요" required>
+		        <textarea class="form-control" cols="165" rows="30" id="commContent" name="commContent" style="resize: none; width: 99%;" required></textarea>
+		        <div class="editor-buttons">
+			        <button class="cancel-button" type="button" onclick="history.back();">취소</button>
+			        <button class="save-button" type="submit">저장</button>
+			    </div>
+	        </form>
+		</div>
+    </section>
+</main>    
+<div th:replace="~{common/footer.html :: foot}"></div>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>여행 사이트 관리자 페이지 - 공지사항 수정</title>
+    <link rel="stylesheet" href="/admin-css/summernote-lite.css">
+    <link href="/admin-css/users.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="/js/summernote-lite.js"></script>
+    <script src="/js/summernote-ko-KR.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- 사이드바 -->
+        <div class="sidebar">
+            <div class="logo" onclick="location.href='/main'">
+                <h2>HAPLA</h2>
+                <span>관리자</span>
+            </div>
+          <ul class="nav-menu">
+            <li>
+                <a href="index"><i class="fas fa-chart-line"></i> <span>대시보드</span></a>
+            </li>
+            <li>
+                <a href="members"><i class="fas fa-users"></i> <span>회원 조회</span></a>
+            </li>
+            <li>
+                <a href="userStats"><i class="fas fa-user-chart"></i> <span>사용자 통계</span></a>
+            </li>
+            <li>
+                <a href="Stats" class="active"><i class="fas fa-chart-bar"></i> <span>접속 통계</span></a>
+            </li>
+            <li>
+                <a href="notice"><i class="fas fa-bullhorn"></i> <span>공지사항</span></a>
+            </li>
+            <li>
+                <a href="report"><i class="fas fa-flag"></i> <span>신고 관리</span></a>
+            </li>
+<!--             <li> -->
+<!--                 <a href="payment"><i class="fas fa-credit-card"></i> <span>결제 관리</span></a> -->
+<!--             </li> -->
+<!--             <li> -->
+<!--                 <a href="reservation"><i class="fas fa-calendar-check"></i> <span>예약 현황</span></a> -->
+<!--             </li> -->
+            <li>
+                <a href="../main"><i class="fas fa-sign-out-alt"></i> <span>로그아웃</span></a>
+            </li>
+        </ul>
+        </div>
+
+        <!-- 메인 콘텐츠 -->
+        <div class="main-content">
+            <header>
+                <div class="header-left">
+                    <h1>공지사항 수정</h1>
+                    <div class="breadcrumb">
+                        <span>HOME</span> / <span>공지사항</span> / <span>수정</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-section">
+                <div class="section-header">
+                    <h2>공지사항 수정</h2>
+                </div>
+                <form id="noticeEditForm" method="post">
+                    <input type="hidden" id="noticeNo" name="noticeNo" th:value="${notice.noticeNo}">
+                    <div class="form-group">
+                        <label for="title">제목</label>
+                        <input type="text" id="title" name="title" class="form-control" th:value="${notice.title}" required>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="isImportant" name="isImportant" value="Y" th:checked="${notice.isImportant == 'Y'}">
+                        <label for="isImportant">중요 공지사항으로 표시</label>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="status">상태</label>
+                        <select id="status" name="status" class="form-control status-select">
+                            <option value="Y" th:selected="${notice.status == 'Y'}">게시중</option>
+                            <option value="N" th:selected="${notice.status == 'N'}">비활성화</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="createDate">작성일</label>
+                        <input type="date" id="createDate" class="form-control" th:value="${#dates.format(notice.createDate, 'yyyy-MM-dd')}" disabled>
+                        <p class="info-text">작성일은 변경할 수 없습니다.</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="views">조회수</label>
+                        <input type="number" id="views" name="views" class="form-control" th:value="${notice.views}" disabled>
+                        <p class="info-text">조회수는 자동으로 집계됩니다.</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="content">내용</label>
+                        <textarea id="content" name="content" class="form-control" th:text="${notice.content}" required></textarea>
+                    </div>
+                   
+                    <div class="button-group">
+                        <button type="button" class="btn btn-secondary" onclick="location.href='/admin/notice'">취소</button>
+                        <button type="submit" class="btn btn-primary">수정완료</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    $(document).ready(function() {
+        $('#content').summernote({
+            height: 500,
+            toolbar: [
+                ['fontname', ['fontname']],
+                ['fontsize', ['fontsize']],
+                ['style', ['bold', 'italic', 'underline','strikethrough', 'clear']],
+                ['color', ['forecolor','color']],
+                ['table', ['table']],
+                ['para', [ 'paragraph']],
+                ['height', ['height']],
+                ['insert',['picture','link','video']],
+                ['view', ['fullscreen', 'help']]
+            ],
+            fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New','맑은 고딕','궁서','굴림체','굴림','돋움체','바탕체'],
+            fontSizes: ['8','9','10','11','12','14','16','18','20','22','24','28','30','36','50','72']
+        });
+    });
+    
+    document.getElementById('noticeEditForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const noticeNo = document.getElementById('noticeNo').value;
+        const title = document.getElementById('title').value.trim();
+        const status = document.getElementById('status').value;
+        const content = document.getElementById('content').value;
+        const isImportant = document.getElementById('isImportant').checked ? 'Y' : 'N';
+        
+        $.ajax({
+            url: '/admin/noticeEdit/' + noticeNo,
+            type: 'post',
+            data: {
+                id: noticeNo,
+                noticeNo: noticeNo,
+                title: title, 
+                status: status,
+                content: content, 
+                isImportant: isImportant
+            },
+            success: function(response) {
+                if(response.success) {
+                    alert('공지사항이 수정되었습니다.');
+                    location.href = '/admin/notice';
+                } else {
+                    alert('공지사항 수정에 실패했습니다.');
+                }
+            },
+            error: function(error) {
+                console.log(error);
+                alert('오류가 발생했습니다.');
+            }
+        });
+    });
+    </script>
+</body>
+</html>

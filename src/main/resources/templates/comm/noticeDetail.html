@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HAPLA 공지사항</title>
+<link href="/css/detail.css" rel="stylesheet" type="text/css">
+<!-- <script src="https://code.jquery.com/jquery-3.7.1.js" -->
+<!--     integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" -->
+<!--     crossorigin="anonymous"></script> -->
+<style>
+    .notice-badge {
+        display: inline-block;
+        background-color: #306263;
+        color: white;
+        padding: 3px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: bold;
+        margin-right: 8px;
+    }
+    
+    .important-badge {
+        display: inline-block;
+        background-color: #e53e3e;
+        color: white;
+        padding: 3px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: bold;
+        margin-right: 8px;
+    }
+</style>
+</head>
+<body>
+    <div th:replace="~{common/header.html :: topbar}"></div>
+    <main>
+        <section class="banner">
+            <img src="/img/communityBanner.png" alt="커뮤니티 배너">
+            <div class="overlay">
+                <h1>여행의 설렘을 함께 나누는 공간에서 당신의 정보를 공유해보세요</h1>
+            </div>
+        </section>
+        <section class="community">
+            <form class="needs-validation" method="POST" id="detailForm">
+                <input type="hidden" name="page" th:value="${page}">
+                <h2 style="display: inline-block;">공지사항</h2>
+                <div class="buttons">
+                    <button class="cancel-button" type="button" onclick="goBackAndRefresh();">목록</button>
+                </div>
+
+                <table>
+                    <tr>
+                        <th>제목</th>
+                        <td colspan="3" width="400px">
+                            <span th:class="${notice.isImportant == 'Y' ? 'important-badge' : 'notice-badge'}">공지</span>
+                            <span th:text="${notice != null ? notice.title : '제목 없음'}"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="50px">등록자</th>
+                        <td>관리자</td>
+                    </tr>
+                    <tr>
+                        <th width="50px">등록일</th>
+                        <td
+                            th:text="${notice != null and notice.createDate != null ? #dates.format(notice.createDate, 'yyyy-MM-dd') : '날짜 없음'}"></td>
+                    </tr>
+                    <tr>
+                        <th>조회수</th>
+                        <td th:text="${notice != null ? notice.views : 0}"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="9" th:utext="${notice.content}"></td>
+                    </tr>
+                </table>
+            </form>
+        </section>
+    </main>    
+    <div th:replace="~{common/footer.html :: foot}"></div>
+
+    <script th:inline="javascript">
+    function goBackAndRefresh() {
+        const backUrl = '/comm/list';
+        window.location.href = backUrl + (backUrl.includes('?') ? '&' : '?') + 'refresh=true';
+    }
+    </script>
+</body>
+</html>

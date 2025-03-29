@@ -1,0 +1,22 @@
+@startuml
+actor User
+participant "Browser" as JS
+participant "ScheduleController" as Controller
+participant "ScheduleService" as Service
+database "DB" as DB
+
+User -> JS : "일정 목록 보기" 클릭
+JS -> Controller : GET /schedule/list
+
+Controller -> Session : getAttribute("loginUser")
+Session --> Controller : Users 객체 반환
+
+Controller -> Service : getMySchedule(userNo)
+Service -> DB : SELECT * FROM Trip WHERE userNo = ?
+
+Service --> Controller : List<Trip> 반환
+Controller -> Model : addAttribute("trip", schedules)
+
+Controller --> JS : return "/schedule/list"
+JS -> User : 일정 목록 페이지 렌더링
+@enduml

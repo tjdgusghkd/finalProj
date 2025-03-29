@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HAPLA 커뮤니티</title>
+    <link href="/css/reviewList.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div th:replace="~{common/header.html :: topbar}" style="position: fixed; top: 0; width: 100%; z-index: 10000;"></div>
+
+<main class="content">
+    <form action="/review/list" method="GET" onsubmit="return validateForm()" style="position: relative; z-index: 1";>
+        <div class="hero" style="height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+    <h3>리뷰 목록</h3>
+    <div class="div" style="display: flex; align-items: center; gap: 10px; width: 60%; max-width: 600px; background: white; padding: 5px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);">
+        <input type="search" name="search" id="search" placeholder="장소 또는 액티비티로 검색" th:value="${search}"
+            style="flex-grow: 1; padding: 12px 15px; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; outline: none; width: 100%;">
+        <button type="submit" style="background: #306263; border: none; padding: 12px 15px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.3s ease;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                <path fill="#ffffff" d="M21.562,18.733l-2.767-2.767c-0.569-0.569-0.779-1.431-0.465-2.172 
+                c0.588-1.386,0.822-2.957,0.57-4.609c-0.548-3.591-3.422-6.507-7.01-7.075c-5.779-0.915-10.695,4-9.779,9.779 
+                c0.568,3.588,3.484,6.461,7.075,7.01c1.652,0.252,3.223,0.019,4.609-0.57c0.741-0.315,1.603-0.104,2.172,0.465l2.767,2.767
+                c0.586,0.586,1.536,0.586,2.121,0l0.707-0.707C22.148,20.269,22.148,19.319,21.562,18.733z M4,10.5C4,6.916,6.916,4,10.5,4
+                S17,6.916,17,10.5S14.084,17,10.5,17S4,14.084,4,10.5z"></path>
+            </svg>
+        </button>
+    </div>
+</div>
+    </form>
+
+    <div class="container">
+        <h2>
+    		전체<span th:text="'(' + ${listCount} + '건)'"></span>
+		</h2>
+        <div class="reviews">
+            <!-- 리뷰가 없을 경우 메시지 표시 -->
+            <div th:if="${list == null or list.isEmpty()}">
+                <p>등록된 리뷰가 없습니다.</p>
+            </div>
+            <!-- ✅ 최대 4개까지만 표시 & 클릭 시 상세보기 이동 가능 -->
+            <div th:each="r: ${list}" class="review-card" th:data-id="${r.reviewNo}" th:data-page="${pi.currentPage}">
+		<img th:src="${r.thumnail != null and r.thumnail != '' ? r.thumnail : '/img/noImage.jpg'}" alt="리뷰 이미지">
+                <div class="review-info">
+                    <h3 th:text="${r.title != null ? r.title : '제목 없음'}"></h3>
+                    <div class="author">
+                        <span th:text="${r.nickname != null ? r.nickname : '익명'}"></span> • 
+                        <span th:text="${r.createDate != null ? #dates.format(r.createDate, 'yyyy/MM/dd') : '날짜 없음'}"></span>
+                        
+                    </div>
+                    <div class="rating-likes">
+                     <div class="rating">
+                         <span th:each="i : ${#numbers.sequence(1, 5)}">
+                             <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" th:style="'fill:' + (${i} <= ${r.rating} ? 'gold' : 'gray')">
+                                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.86L12 17.77 6.82 21l1.18-6.86-5-4.87 6.91-1L12 2z"/>
+                             </svg>
+                         </span>
+                     </div>
+                     <div class="likes">
+                     	❤️
+                     	<span th:text="${r.likes != null ? r.likes : 0}"></span>
+                     </div>
+             	</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ✅ 페이징 처리 (버튼 정상 동작) -->
+        <div class="pagination-container">
+            <ul class="pagination">
+                <!-- 이전 페이지 -->
+                <li class="page-item" th:classappend="${pi.currentPage == 1} ? 'disabled'">
+                    <a class="page-link" th:href="@{${loc}(page=${pi.currentPage - 1})}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+
+                <!-- 페이지 번호 -->
+                <li class="page-item" th:each="p : ${#numbers.sequence(pi.startPage, pi.endPage)}" th:classappend="${p == pi.currentPage} ? 'active'">
+                    <a class="page-link" th:href="@{${loc}(page=${p})}">[[${p}]]</a>
+                </li>
+
+                <!-- 다음 페이지 -->
+                <li class="page-item" th:classappend="${pi.currentPage == pi.endPage} ? 'disabled'">
+                    <a class="page-link" th:href="@{${loc}(page=${pi.currentPage + 1})}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{common/footer.html :: foot}" style="position: fixed; top: 0; width: 100%; z-index: 10000;"></div>
+
+<script th:inline="javascript">
+    window.addEventListener('load', () => {
+        // ✅ 리뷰 카드 클릭 시 상세 페이지 이동
+        const reviewCards = document.querySelectorAll('.review-card');
+        for (const card of reviewCards) {
+            card.addEventListener('click', function() {
+                const reviewNo = this.getAttribute('data-id'); // 리뷰 번호
+                const currentPage = /*<![CDATA[*//*[[${pi.currentPage}]]*/1/*]]>*/; // 현재 페이지 번호
+                location.href = `/review/` + reviewNo + `/` + currentPage; // ✅ 리뷰 상세 페이지로 이동
+            });
+        }
+
+        // ✅ 검색 기능 활성화
+        const searchForm = document.querySelector('form[action="/review/list"]');
+        const searchInput = document.getElementById('search');
+
+        searchForm.addEventListener('submit', function(event) {
+            if (!searchInput.value.trim()) {
+                alert('검색어를 입력하세요.'); // ✅ 검색어가 없을 경우 경고 메시지
+                event.preventDefault(); // ✅ 폼 제출 방지
+                return false;
+            }
+        });
+
+        // ✅ 검색창에서 엔터 입력 시 폼 제출
+        searchInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // ✅ 기본 엔터 기능 방지
+                searchForm.submit(); // ✅ 검색 실행
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hapla.comm.model.mapper.CommMapper">
+    <select id="getListCount" parameterType="int" resultType="int">
+        SELECT COUNT(*) FROM comm WHERE status = 'Y'
+    </select>
+
+	<select id="selectCommList" resultType="com.hapla.comm.model.vo.Comm">
+        SELECT comm.comm_no, comm.category_no, comm.user_no, comm.title, comm.comm_content, comm.views,
+               comm.create_date, comm.update_date, comm.status,
+               category.category_name, users.nickname,
+               NVL(like_table.like_count, 0) AS likes
+        FROM comm
+        JOIN users ON comm.user_no = users.user_no
+        JOIN category ON comm.category_no = category.category_no
+        LEFT JOIN (SELECT comm_no, COUNT(*) AS like_count FROM clike GROUP BY comm_no) like_table
+               ON comm.comm_no = like_table.comm_no
+        WHERE comm.status = 'Y'
+	    ORDER BY comm.create_date DESC
+    </select>
+	
+	
+	<insert id="insertComm">
+	    <selectKey order="BEFORE" resultType="int" keyProperty="commNo">
+	        SELECT seq_comm.nextval FROM dual
+	    </selectKey>
+	    INSERT INTO comm 
+	    (comm_no, category_no, user_no, title, comm_content, views, create_date, update_date, status) 
+	    VALUES (#{commNo}, #{categoryNo}, #{userNo}, #{title}, #{commContent}, DEFAULT, SYSDATE, SYSDATE, DEFAULT)
+	</insert>
+
+	<select id="selectComm" resultType="com.hapla.comm.model.vo.Comm">
+	    SELECT comm.*, users.nickname
+	    FROM comm
+	    	 JOIN users ON comm.user_no = users.user_no
+	    WHERE comm.status = 'Y' AND comm.comm_no = #{commNo}
+	</select>
+	
+	<update id="updateCount">
+		update comm
+		set views = views + 1
+		where comm_no = #{commNo}
+	</update>
+	
+	<select id="selectReplyList" resultType="com.hapla.comm.model.vo.Reply">
+		select reply.*, users.nickname
+		from reply
+			 join users on reply.user_no = users.user_no
+		where reply.comm_no = #{commNo}
+		order by reply_no asc
+	</select>
+	
+	<insert id="insertReply">
+		insert into reply
+		values (seq_reply.nextval, #{userNo}, #{commNo}, #{replyContent}, sysdate, sysdate, default)
+	</insert>
+	
+	<update id="updateComm">
+		update comm
+		set title = #{title}, comm_content = #{commContent}, update_date = sysdate
+		where comm_no = #{commNo}
+	</update>
+	
+	<update id="deleteComm">
+		update comm
+		set status = 'N'
+		where comm_no = #{commNo}
+	</update>
+	
+	<delete id="deleteReply">
+		delete from reply
+		where reply_No = #{replyNo}
+	</delete>
+	
+	<update id="updateReply">
+		update reply
+		set reply_content = #{replyContent}
+		where reply_No = #{replyNo}
+	</update>
+
+	<select id="checkUserLike" resultType="int">
+	    SELECT COUNT(*) FROM clike WHERE user_no = #{userNo} AND comm_no = #{commNo}
+	</select>
+	
+	<insert id="insertLike" parameterType="map">
+	    INSERT INTO clike VALUES (seq_clike.nextval, #{userNo}, #{commNo})
+	</insert>
+	
+	<delete id="deleteLike" parameterType="map">
+	    DELETE FROM clike WHERE user_no = #{userNo} AND comm_no = #{commNo}
+	</delete>
+	
+	<select id="countLikes" parameterType="map" resultType="int">
+	    SELECT count(*) FROM clike WHERE comm_no = #{commNo}
+	</select>
+
+	<select id="getSearchListCount" resultType="int">
+        SELECT COUNT(*) FROM comm
+        WHERE (#{search} IS NULL OR title LIKE '%' || #{search} || '%')
+    </select>
+    
+    <select id="searchCommList" resultType="com.hapla.comm.model.vo.Comm">
+	    SELECT comm.comm_no, comm.category_no, comm.user_no, comm.title, comm.comm_content, comm.views,
+	           comm.create_date, comm.update_date, comm.status,
+	           category.category_name, users.nickname,
+	           NVL(like_table.like_count, 0) AS likes
+	    FROM comm
+	    JOIN users ON comm.user_no = users.user_no
+	    JOIN category ON comm.category_no = category.category_no
+	    LEFT JOIN (SELECT comm_no, COUNT(*) AS like_count FROM clike GROUP BY comm_no) like_table
+	           ON comm.comm_no = like_table.comm_no
+	    WHERE comm.status = 'Y'
+	    AND (
+	        #{category} IS NULL 
+	        OR #{category} = 0  <!-- ✅ 전체 선택 (0) 인 경우 모든 카테고리 포함 -->
+	        OR (#{category} = 1 AND comm.category_no IN (1, 2, 3, 4, 5))  <!-- ✅ 1번 선택지가 포함하는 범위 지정 -->
+	        OR comm.category_no = #{category}  <!-- ✅ 개별 카테고리 검색 -->
+	    )
+	    AND (
+	        #{search} IS NULL OR TRIM(#{search}) = ''  <!-- ✅ 검색어가 없거나 공백이면 전체 검색 -->
+	        OR comm.title LIKE '%' || #{search} || '%' 
+	        OR comm.comm_content LIKE '%' || #{search} || '%'
+	    )
+	    ORDER BY comm.create_date DESC
+	</select>
+
+
+
+
+	<select id="selectReply" resultType="com.hapla.comm.model.vo.Reply">
+		select reply.*, users.nickname
+		from reply
+			join users on reply.user_no users.user_no
+		where reply.reply_no = #{replyNo}
+	</select>
+</mapper>
+
+
+

@@ -1,0 +1,48 @@
+@startuml
+actor User
+participant "Frontend (JS)" as Frontend
+participant "Backend (Spring)" as Backend
+participant "Kakao API" as KakaoAPI
+participant "Google API" as GoogleAPI
+
+== Kakao 로그인 ==
+User -> Frontend: 카카오 로그인 버튼 클릭
+Frontend -> KakaoAPI: Kakao.Auth.login(scope: profile_nickname, profile_image)
+KakaoAPI --> Frontend: success: access_token
+Frontend -> KakaoAPI: /v2/user/me (access_token)
+KakaoAPI --> Frontend: 사용자 정보 (id, nickname, profile_image)
+Frontend -> Backend: /checkUser (tokenId, type: "K")
+Backend --> Frontend: checkResult (0: 신규, 1: 기존), user
+alt checkResult == 0 (신규 사용자)
+    Frontend -> User: 회원가입 모달창 표시 (updateModal)
+else checkResult == 1 (기존 사용자)
+    Frontend -> User: 로그인 성공 페이지 새로고침
+end
+
+== Google 로그인 ==
+User -> Frontend: 구글 로그인 버튼 클릭
+Frontend -> GoogleAPI: google.accounts.id.initialize & renderButton
+GoogleAPI --> Frontend: JWT 토큰 (response.credential)
+Frontend -> Backend: /google-login/verify-token (POST token)
+Backend -> GoogleAPI: https://www.googleapis.com/oauth2/v3/tokeninfo?id_token
+GoogleAPI --> Backend: 사용자 정보 (sub, name, picture)
+Backend --> Frontend: 사용자 정보 (tokenId, name, picture)
+Frontend -> Backend: /checkUser (tokenId, type: "G")
+Backend --> Frontend: checkResult (0: 신규, 1: 기존), user
+alt checkResult == 0 (신규 사용자)
+    Frontend -> User: 회원가입 모달창 표시 (updateModal)
+else checkResult == 1 (기존 사용자)
+    Frontend -> User: 로그인 성공 페이지 새로고침
+end
+
+== 회원가입 (신규 사용자) ==
+User -> Frontend: 회원가입 버튼 클릭 (#joinBtn)
+Frontend -> Backend: /join (POST formData: tokenId, type, etc.)
+Backend --> Frontend: {success: true} or Exception
+alt success == true
+    Frontend -> User: 모달창 숨김, 로그인 모달 표시, "회원가입 성공" 알림
+else success == false
+    Frontend -> User: "회원가입 실패" 알림
+end
+
+@enduml

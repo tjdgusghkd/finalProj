@@ -1,0 +1,57 @@
+@startuml
+actor User
+participant "Frontend (JS)" as Frontend
+participant "Backend (Spring)" as Backend
+participant "Google Places API" as GoogleAPI
+participant "Weather API" as WeatherAPI
+
+== 카테고리 선택 ==
+User -> Frontend: 카테고리 버튼 클릭
+Frontend -> Frontend: 선택된 카테고리 업데이트 (selectedCategory), UI 변경
+note right: active 클래스 토글, placeholder 변경, 검색바 표시/숨김
+
+== 장소 검색 (특정 카테고리) ==
+User -> Frontend: 검색어 입력 (city) + 검색 실행
+Frontend -> Frontend: 입력값 검증 (city 비어있으면 경고)
+alt city 입력됨
+    Frontend -> Backend: /search/{city}/{category}/{select}
+    Backend -> GoogleAPI: textsearch?query={city}+{category}&key={apiKey}
+    GoogleAPI --> Backend: 검색 결과 (results: place_id, name, rating, etc.)
+    Backend -> Backend: 결과 가공 (getPlacesFromApi)
+    Backend --> Frontend: places, apiKey, set
+    Frontend -> User: /main 페이지 렌더링 (검색 결과 표시)
+else city 비어있음
+    Frontend -> User: "도시명을 입력하세요" 알림
+end
+
+== 장소 검색 (전체 카테고리) ==
+User -> Frontend: "전체" 선택 후 검색 실행
+Frontend -> Backend: /searchAll/{city}
+Backend -> GoogleAPI: textsearch?query={city}&key={apiKey} (main_info 용)
+GoogleAPI --> Backend: main_info 결과
+Backend -> GoogleAPI: textsearch?query={city}+{category}&key={apiKey} (각 카테고리별)
+GoogleAPI --> Backend: 카테고리별 결과 (tourist_attraction, lodging, etc.)
+Backend -> GoogleAPI: details?place_id={placeId}&key={apiKey} (날씨용)
+GoogleAPI --> Backend: 장소 상세 정보 (영어 도시명)
+Backend -> WeatherAPI: current.json?q={enCity}&key={weatherKey}
+WeatherAPI --> Backend: 날씨 정보
+Backend -> Backend: 결과 가공 (getAllPlacesData)
+Backend --> Frontend: categoryResults, main_info, set, categories
+Frontend -> User: /main 페이지 렌더링 (전체 결과 표시)
+
+== 즐겨찾기 조회 (로그인 시) ==
+note right: /main 접속 시 로그인 상태 확인
+alt loginUser 존재
+    Backend -> Backend: usersService.selectPlaceId(userNo)
+    loop 각 placeId에 대해
+        Backend -> GoogleAPI: details?place_id={placeId}&key={apiKey}
+        GoogleAPI --> Backend: 장소 세부 정보
+        Backend -> Backend: 결과 추가 (fetchFavoritePlaces)
+    end
+    Backend --> Frontend: places, set="즐겨찾기"
+    Frontend -> User: /main 페이지 렌더링 (즐겨찾기 표시)
+else loginUser 없음
+    Frontend -> User: /main 페이지 렌더링 (기본 화면)
+end
+
+@enduml

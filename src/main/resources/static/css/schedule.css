@@ -1,0 +1,380 @@
+/* /* 🌍 전체 컨테이너 flex 설정 */
+body, .container {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+} */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    display: flex;
+    height: 100vh;
+    position: relative;
+}
+
+/* 🌍 오른쪽 Google 지도 */
+#map {
+    flex: 1;
+    height: 100vh;
+}
+
+.sidebar {
+    position: fixed; /* 사이드바를 왼쪽 고정 */
+    left: 0;
+    top: 0;
+    width: 20%; /* 사이드바 너비 */
+    height: 100%;
+    background: white;
+    padding: 15px;
+    border-right: 1px solid #ddd;
+    overflow-y: auto;
+    z-index: 1000; /* 사이드바가 위에 오도록 설정 */
+}
+/* 스크롤바의 전체 영역 */
+.sidebar::-webkit-scrollbar {
+    width: 8px; /* 세로 스크롤바의 너비 */
+}
+
+/* 스크롤바의 막대 영역 */
+.sidebar::-webkit-scrollbar-thumb {
+    background-color: #ffffff; /* 스크롤바 색상 */
+    border-radius: 4px; /* 스크롤바 막대의 둥근 모서리 */
+}
+
+/* 스크롤바의 트랙(배경) 영역 */
+.sidebar::-webkit-scrollbar-track {
+    background: #ffffff; /* 스크롤바 배경 색상 */
+    /* border-radius: 10px; 스크롤바 배경의 둥근 모서리 */
+}
+
+.hapla-logo {
+    font-weight: bold;
+    color: #0099cc;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.sidebar-title{
+	margin-top: 5%;
+}
+
+.trip-title{
+	font-size: 20px;
+	font-weight: bold;
+
+}
+
+.menu{
+	cursor: pointer;
+}
+
+#tripDates{
+	display: flex;
+    width: 100%;
+    margin-top: 3%;
+    margin-bottom: 10%;
+}
+
+/* 📅 여행 일정 리스트 스타일 */
+.date-list {
+    margin-top: 15px;
+    list-style: none;
+}
+
+.date-container {
+    margin-bottom: 10%;
+	margin-top: 5%;
+	curesor: pointer;
+}
+
+
+.plan-title {
+    /* font-weight: bold; */
+    margin-bottom: 3%;
+}
+
+.date-item {
+    flex-direction: column;
+    gap: 5px;
+    padding: 6%;
+    border-radius: 15px; /* ✅ 모서리를 둥글게 */
+    border: 1px solid #e0e0e0; /* ✅ 테두리 추가 */
+    background: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* ✅ 부드러운 그림자 */
+    max-width: 100%; /* ✅ 최대 너비 제한 */
+    display: grid;
+    flex-direction: row;
+    margin-top: 3%;
+}
+
+.addDetail{
+	display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: #f3f3f3;
+/*     padding: 8px;
+    margin-top: 5px; */
+    border-radius: 5px;
+    color: #333;
+    font-size: 15px;
+}
+
+.plan-date{
+    font-weight: bold;
+    color: #34495e;
+    margin-bottom: 8px;
+    font-size: 16px;
+}
+
+.memo-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.memo-text {
+    flex: 1;
+    display: flex;
+    font-size: 13px;
+    justify-content: center;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    /* margin-left: auto; */
+    padding: 1%;
+    /* display: none; */
+}
+
+.control-add{
+	border: none;
+    background: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #CACACA;
+    cursor: pointer;
+}
+
+/* 🖱️ 버튼 스타일 */
+.control-btn {
+    border: 1px solid #858585;
+    background: white;
+    cursor: pointer;
+    border-radius: 15px;
+    display: inline-block;
+    padding: 2px;
+    margin: 3px;
+}
+
+.save-btn button {
+    background-color: #5A97C7;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    font-size: 16px;
+    cursor: pointer;
+    display: block;
+    margin: auto;
+    margin-bottom: 10%;
+}
+
+.save-btn button:hover {
+    background-color: #4A87B7; /* 호버 시 배경색 변경 */
+}
+
+ /* 사이드 패널 스타일 */
+ .side-panel {
+    position: fixed;
+    /* position: absolute; */
+    left: 21.6%; /* 사이드바 옆에 붙이기 */
+    top: 0;
+    width: 300px;
+    height: 100%;
+    background: white;
+    box-shadow: -2px 0px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    flex-direction: column;
+    z-index: 1000; /* 사이드바보다 위로 설정 */
+    display: none; /* 처음에는 숨김 */
+}
+
+/* 패널 공통 내부 컨테이너(본문 영역) */
+.side-panel-content {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    font-size: 16px;
+    font-weight: bold;
+    border-bottom: 1px solid #eee;
+}
+
+/* 검색 컨테이너 */
+.search-container {
+    position: relative;
+    padding: 16px;
+    right: 5%;
+    
+}
+
+.search-container input[type="text"] {
+    width: 91%;
+    padding: 12px 40px 12px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+}
+
+/* 검색 아이콘 */
+.search-container .search-icon {
+    position: absolute;
+    left: 93%;
+    top: 26px;
+    cursor: pointer;
+}
+
+/* 검색 결과 리스트 (공통) */
+ul#search-results {
+    list-style: none;
+    margin: 0;
+    padding: 16px;  /* 좌우 패딩 */
+}
+
+/* 검색 결과 아이템 (이미지, 텍스트, 버튼 등) */
+ul#search-results li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    padding: 12px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    background-color: #fafafa;
+    cursor: pointer; /* 클릭 가능하게 */
+}
+
+/* 썸네일 이미지 (있다면) */
+ul#search-results li img {
+    width: 60px;
+    height: 60px;
+    border-radius: 6px;
+    object-fit: cover;
+    margin-right: 12px;
+}
+
+/* 장소 정보 영역 */
+ul#search-results li .place-info {
+    flex: 1;               /* 나머지 공간 차지 */
+    display: flex;
+    flex-direction: column;
+    gap: 4px;              /* 텍스트 사이 간격 */
+}
+
+/* 장소 이름 */
+ul#search-results li .place-info .place-title {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+/* 장소 주소, 평점 등 부가 정보 */
+ul#search-results li .place-info .place-sub {
+    font-size: 14px;
+    color: #666;
+}
+
+/* 추가(+) 버튼 */
+ul#search-results li button.add-button {
+    background-color: #007BFF;
+    border: none;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 8px;
+}
+
+
+/* 메모 패널 */
+#memo-panel .panel-header {
+    background-color: #f7f7f7;
+}
+
+#memo-panel textarea {
+	width: 91%;
+    height: 200px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    resize: none;
+    font-size: 14px;
+    margin-top: 5%;
+    margin-bottom: 1%;
+}
+
+.saveMemo {
+    background-color: #5A97C7;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.saveMemo:hover {
+    background-color: #4A87B7;
+}
+
+.remove-btn {
+    background: #e0e0e0;
+    color: #9c9c9c;
+    border: none;
+    padding: 5px 8px;
+    margin-left: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    border-radius: 25px;
+    transition: background-color 0.3s ease;
+}
+
+.remove-btn:hover {
+    background: #cfcfcf;
+    color: #000;
+}
+
+/* 숙소(장소) 검색 패널 */
+#stay-panel .panel-header {
+    background-color: #f0f4ff;
+}
+
+/* 마커 패널 */
+#marker-panel .panel-header {
+    background-color: #fffbf0;
+}
+.hidden {
+    display: none;
+}

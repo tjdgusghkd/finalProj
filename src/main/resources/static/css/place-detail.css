@@ -1,0 +1,98 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.place-detail-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.place-detail-container img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.place-info {
+    margin-top: 20px;
+}
+
+.place-info h2 {
+    font-size: 24px;
+    color: #0099cc;
+    margin: 0;
+}
+
+.place-info .like-container {
+    font-size: 24px;
+    color: #0099cc;
+    display: flex; /* 요소들을 가로로 배치 */
+    justify-content: flex-end; /* 오른쪽 정렬 유지 */
+    align-items: center; /* 세로 중앙 정렬 */
+    gap: 5px; /* 하트와 숫자 사이 간격 */
+}
+
+.place-info .like-container label {
+    margin: 0;
+    cursor: pointer;
+}
+
+.place-info .header-container {
+    display: grid;
+    grid-template-columns: 1fr auto; /* 두 개의 열, 첫 번째는 1fr, 두 번째는 auto */
+    align-items: center;
+}
+
+.place-info p {
+    margin: 8px 0;
+}
+
+.rating {
+    color: #ff9800;
+    font-weight: bold;
+}
+
+.place-info a {
+    color: #0099cc;
+    text-decoration: none;
+}
+
+#star {
+    margin: 0;
+}
+
+#star img {
+    width: 32px; /* 하트 이미지 크기 */
+    height: 32px;
+    vertical-align: middle; /* 세로 정렬 조정 */
+}
+
+#count {
+    margin: 0;
+    font-size: 16px; /* 숫자 크기 조정 */
+    line-height: 32px; /* 하트 높이에 맞춰 세로 정렬 */
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .like-container {
+        gap: 3px; /* 작은 화면에서 간격 줄이기 */
+    }
+
+    #count {
+        font-size: 14px; /* 작은 화면에서 텍스트 크기 줄이기 */
+    }
+
+    #star img {
+        width: 24px; /* 작은 화면에서 하트 크기 줄이기 */
+        height: 24px;
+    }
+}

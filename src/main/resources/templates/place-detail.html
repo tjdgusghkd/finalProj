@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <title>장소 상세</title>
+    <link href="/css/place-detail.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div th:replace="~{common/header.html :: topbar}"></div>
+
+<div class="place-detail-container">
+    <!-- 이미지 -->
+    <img onclick="goGoogleMap()"
+         th:src="'https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=' + ${placeDetails.result.photos[0]['photo_reference']} + '&key=AIzaSyCEHjTtVqBclz07ADqbkGjqGIe94Cq-S60'"
+         alt="장소 사진" width="400" height="300"/>
+
+    <div class="place-info">
+        <input type="hidden" name="type" id="type" th:value="${type}">
+        <input type="hidden" name="placeId" id="placeId" th:value="${placeId}">
+
+        <!-- 장소 이름과 좋아요 표시 -->
+        <div class="header-container">
+            <h2 th:text="${placeDetails.result.name}">장소 이름</h2>
+            <div class="like-container">
+                <label id="star">
+                    <img th:if="${check == true}" src="/img/heart2.svg" alt="Filled Heart"
+                         style="width: 32px; height: 32px;">
+                    <img th:unless="${check == true}" src="/img/heart1.svg" alt="Empty Heart"
+                         style="width: 32px; height: 32px;">
+                </label>
+                <label for="star" id="count" th:text="${count}"></label>
+            </div>
+        </div>
+
+        <!-- 평점 -->
+        <p class="rating" th:text="'평점: ' + ${placeDetails.result.rating}">평점</p>
+
+        <!-- 주소 -->
+        <p th:text="'주소: ' + ${placeDetails.result.formatted_address}">주소</p>
+
+        <a th:href="'https://www.google.com/maps/place/?q=place_id:'+${placeId}">해당 장소로 이동하기</a>
+        <br>
+
+        <!-- 리뷰 -->
+        <h3>리뷰:</h3>
+        <div th:each="review : ${placeDetails.result.reviews}">
+            <p><strong th:text="${review.author_name}">작성자 이름</strong> : <span th:text="${review.text}">리뷰 내용</span></p>
+        </div>
+    </div>
+</div>
+<div th:replace="~{common/footer.html :: foot}"></div>
+</body>
+<script th:inline="javascript">
+    // Thymeleaf로 userNo를 전역 변수로 설정
+    window.userNo = [[${session.loginUser != null ? session.loginUser.userNo : 0}]];
+</script>
+<script src="/js/place-detail.js"></script>
+</html>

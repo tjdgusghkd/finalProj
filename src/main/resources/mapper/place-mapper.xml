@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hapla.place.model.mapper.PlaceMapper">
+    <select id="countStar">
+		select count(*) from place where api_id = #{placeId}
+	</select>
+
+	<select id="checkPlace">
+		select count(*) from place where user_no = #{userNo} and api_id = #{apiId}
+	</select>
+
+	<insert id="insertPlace">
+		insert into place values(seq_place.nextval, #{userNo}, #{type}, #{apiId})
+	</insert>
+
+	<delete id="deletePlace">
+		delete from place where user_no = #{userNo} and api_id = #{apiId}
+	</delete>
+</mapper>

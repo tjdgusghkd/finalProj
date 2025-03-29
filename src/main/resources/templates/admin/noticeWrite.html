@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>여행 사이트 관리자 페이지 - 공지사항 작성</title>
+   <link rel="stylesheet" href="/admin-css/summernote-lite.css">
+    <link href="/admin-css/users.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+     <script src="/js/summernote-lite.js"></script>
+	<script src="/js/summernote-ko-KR.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- 사이드바 -->
+        <div class="sidebar">
+            <div class="logo" onclick="location.href='/main'">
+                <h2>HAPLA</h2>
+                <span>관리자</span>
+            </div>
+           <ul class="nav-menu">
+            <li>
+                <a href="index"><i class="fas fa-chart-line"></i> <span>대시보드</span></a>
+            </li>
+            <li>
+                <a href="members"><i class="fas fa-users"></i> <span>회원 조회</span></a>
+            </li>
+            <li>
+                <a href="userStats"><i class="fas fa-user-chart"></i> <span>사용자 통계</span></a>
+            </li>
+            <li>
+                <a href="Stats" class="active"><i class="fas fa-chart-bar"></i> <span>접속 통계</span></a>
+            </li>
+            <li>
+                <a href="notice"><i class="fas fa-bullhorn"></i> <span>공지사항</span></a>
+            </li>
+            <li>
+                <a href="report"><i class="fas fa-flag"></i> <span>신고 관리</span></a>
+            </li>
+<!--             <li> -->
+<!--                 <a href="payment"><i class="fas fa-credit-card"></i> <span>결제 관리</span></a> -->
+<!--             </li> -->
+<!--             <li> -->
+<!--                 <a href="reservation"><i class="fas fa-calendar-check"></i> <span>예약 현황</span></a> -->
+<!--             </li> -->
+            <li>
+                <a href="../main"><i class="fas fa-sign-out-alt"></i> <span>로그아웃</span></a>
+            </li>
+        </ul>
+        </div>
+
+        <!-- 메인 콘텐츠 -->
+        <div class="main-content">
+            <header>
+                <div class="header-left">
+                    <h1>공지사항 작성</h1>
+                    <div class="breadcrumb">
+                        <span>HOME</span> / <span>공지사항</span> / <span>작성</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-section">
+                <div class="section-header">
+                    <h2>새 공지사항 작성</h2>
+                </div>
+                <form id="noticeForm" action="/admin/noticeWrite" method="post">
+                    <div class="form-group">
+                        <label for="title">제목</label>
+                        <input type="text" id="title" name="title" class="form-control" placeholder="공지사항 제목을 입력하세요" required>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="isImportant" name="isImportant" value='Y'>
+                        <label for="isImportant">중요 공지사항으로 표시</label>
+                    </div>
+                    
+<!--                     <div class="form-group"> -->
+<!--                         <label for="status">상태</label> -->
+<!--                         <select id="status" name="status" class="form-control status-select"> -->
+<!--                             <option value="Y">게시중</option> -->
+<!--                             <option value="N">비활성화</option> -->
+<!--                         </select> -->
+<!--                     </div> -->
+                    
+                    <div class="form-group">
+                        <label for="content">내용</label>
+                        <textarea id="content" name="content" class="form-control" placeholder="공지사항 내용을 입력하세요" required></textarea>
+                    </div> 
+                    
+                    <!-- 날짜 필드 제거 - 서버에서 처리 -->
+                    
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-primary">등록하기</button>
+                        <button type="button" class="btn btn-secondary" onclick="location.href='notice'">취소</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline = "javascript">
+    $(document).ready(function() {
+        $('#content').summernote({
+            height: 500,
+            toolbar: [
+                ['fontname', ['fontname']],
+                ['fontsize', ['fontsize']],
+                ['style', ['bold', 'italic', 'underline','strikethrough', 'clear']],
+                ['color', ['forecolor','color']],
+                ['table', ['table']],
+                ['para', [ 'paragraph']],
+                ['height', ['height']],
+                ['insert',['picture','link','video']],
+                ['view', ['fullscreen', 'help']]
+            ],
+            fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New','맑은 고딕','궁서','굴림체','굴림','돋움체','바탕체'],
+            fontSizes: ['8','9','10','11','12','14','16','18','20','22','24','28','30','36','50','72']
+        });
+    });
+    
+    document.getElementById('noticeForm').addEventListener('submit', function(e) {
+        // 중요 공지사항 체크박스가 체크되지 않았을 경우 'N' 값 추가
+        const isImportantCheckbox = document.getElementById('isImportant');
+        if (!isImportantCheckbox.checked) {
+            const hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = 'isImportant';
+            hiddenInput.value = 'N';
+            this.appendChild(hiddenInput);
+        }
+    });
+    </script>
+</body>
+</html>

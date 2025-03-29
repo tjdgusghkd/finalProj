@@ -1,0 +1,22 @@
+@startuml
+actor User
+participant "Browser" as JS
+participant "ScheduleController" as Controller
+participant "ScheduleService" as Service
+database "DB" as DB
+
+User -> JS : 일정 상세보기 클릭
+JS -> Controller : GET /schedule/detail/{tripNo}
+
+Controller -> Service : getTripNo(tripNo)
+Service -> DB : SELECT * FROM Trip WHERE tripNo = ?
+
+Controller -> Service : getTripDetail(tripNo)
+Service -> DB : SELECT * FROM Detail WHERE tripNo = ?
+
+Controller -> Model : addAttribute("trip", trip)
+Controller -> Model : addAttribute("detailList", detailList)
+
+Controller --> JS : return "/schedule/detail" (HTML 렌더링)
+JS -> User : 상세 페이지 렌더링 (trip + detailList)
+@enduml

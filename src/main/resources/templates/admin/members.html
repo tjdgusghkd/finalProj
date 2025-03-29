@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>여행 사이트 관리자 페이지 - 회원 조회</title>
+   <link href="/admin-css/users.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+ <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- 사이드바 -->
+        <div class="sidebar">
+            <div class="logo" onclick="location.href='/main'">
+                <h2>HAPLA</h2>
+                <span>관리자</span>
+            </div>
+         <ul class="nav-menu">
+            <li>
+                <a href="index"><i class="fas fa-chart-line"></i> <span>대시보드</span></a>
+            </li>
+            <li>
+                <a href="members"><i class="fas fa-users"></i> <span>회원 조회</span></a>
+            </li>
+            <li>
+                <a href="userStats"><i class="fas fa-user-chart"></i> <span>사용자 통계</span></a>
+            </li>
+            <li>
+                <a href="Stats" class="active"><i class="fas fa-chart-bar"></i> <span>접속 통계</span></a>
+            </li>
+            <li>
+                <a href="notice"><i class="fas fa-bullhorn"></i> <span>공지사항</span></a>
+            </li>
+            <li>
+                <a href="report"><i class="fas fa-flag"></i> <span>신고 관리</span></a>
+            </li>
+<!--             <li> -->
+<!--                 <a href="payment"><i class="fas fa-credit-card"></i> <span>결제 관리</span></a> -->
+<!--             </li> -->
+<!--             <li> -->
+<!--                 <a href="reservation"><i class="fas fa-calendar-check"></i> <span>예약 현황</span></a> -->
+<!--             </li> -->
+            <li>
+                <a href="../main"><i class="fas fa-sign-out-alt"></i> <span>로그아웃</span></a>
+            </li>
+        </ul>
+        </div>
+
+        <!-- 메인 콘텐츠 -->
+        <div class="main-content">
+            <header>
+                <div class="header-left">
+                    <h1>회원 조회</h1>
+                    <div class="breadcrumb">
+                        <span>HOME</span> / <span>회원 조회</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-section">
+                <div class="section-header">
+                    <h2>회원 조회</h2>
+                    <div class="search-filter">
+                        <input type="text" id="keyword" placeholder="닉네임 검색" th:value="${keyword}">
+                        <select id="order">
+                            <option value="new" th:selected="${order == 'new'}">최신순</option>
+                            <option value="old" th:selected="${order == 'old'}">오래된순</option>
+                        </select>
+                        <button class="search-btn" onclick="searchUsers()">검색</button>
+                    </div>
+                </div>
+                <div class="members-list">
+                    <div class="member-item" th:each="l : ${list}">
+                        <div class="member-header">
+                            <div class="member-name" th:text="${l.nickname}"></div>
+                            <input type="hidden" class="user-no" name="userNo" th:value="${l.userNo}">
+                            <div th:class="'member-status ' + ${l.status == 'Y' ? 'active' : 'inactive'}" 
+                                 th:text="${l.status == 'Y' ? '활성' : '비활성'}"
+                                 th:data-status="${l.status}"></div>
+                            <button class="toggle-btn">상세 정보 <i class="fas fa-chevron-down"></i></button>
+                        </div>
+                        <div class="member-details">
+                            <div class="detail-item">
+                                <span class="label">이메일:</span>
+                                <span class="value" th:text="${l.email}"></span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="label">닉네임:</span>
+                                <span class="value" th:text="${l.nickname}"></span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="label">이름:</span>
+                                <span class="value" th:text="${l.name}"></span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="label">가입일자:</span>
+                                <span class="value" th:text="${l.createDate}"></span>
+                            </div>
+                            <div class="status-controls">
+                                <button class="status-btn active" data-status="Y">활성화</button>
+                                <button class="status-btn inactive" data-status="N">비활성화</button>
+                            </div>
+                        </div>
+                    </div>
+                   
+                   
+                  <!-- 페이징 -->
+            <div class="pagination" th:if="${not #lists.isEmpty(list)}">            
+                <!-- 이전 페이지 -->
+                <a th:if="${pi.currentPage > 1}" 
+                   th:href="@{${loc}(userPage=${pi.currentPage-1}, keyword=${keyword})}"
+                   class="page-link">&lt;</a>
+
+                <!-- 페이지 번호 -->
+                <th:block th:each="page : ${#numbers.sequence(pi.startPage, pi.endPage)}">
+                    <a th:if="${page != pi.currentPage}"
+                       th:href="@{${loc}(userPage=${page}, keyword=${keyword})}"
+                       th:text="${page}"
+                       class="page-link"></a>
+                    <span th:if="${page == pi.currentPage}"
+                          th:text="${page}"
+                          class="page-link active"></span>
+                </th:block>
+
+                <!-- 다음 페이지 -->
+                <a th:if="${pi.currentPage < pi.maxPage}"
+                   th:href="@{${loc}(userPage=${pi.currentPage+1}, keyword=${keyword})}"
+                   class="page-link">&gt;</a>
+            </div>
+        
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+    // 회원 상세 정보 토글
+    const toggleBtns = document.querySelectorAll(".toggle-btn");
+    toggleBtns.forEach((btn) => {
+        btn.addEventListener("click", function () {
+            const memberItem = this.closest(".member-item");
+            const details = memberItem.querySelector(".member-details");
+
+            if (details.style.display === "block") {
+                details.style.display = "none";
+                this.querySelector("i").classList.remove("fa-chevron-up");
+                this.querySelector("i").classList.add("fa-chevron-down");
+            } else {
+                details.style.display = "block";
+                this.querySelector("i").classList.remove("fa-chevron-down");
+                this.querySelector("i").classList.add("fa-chevron-up");
+            }
+        });
+    });
+
+    // 회원 검색 
+    function searchUsers() {
+        const keyword = document.getElementById("keyword").value;
+        const order = document.getElementById("order").value;
+      
+        location.href = 'members?userPage=1&keyword=' + keyword + '&order=' + order;
+    }
+
+    // 페이지 변경
+    function changePage(page) {
+        const keyword = document.getElementById("keyword").value;
+        const order = document.getElementById("order").value;
+       
+        location.href = 'members?userPage=' + page + '&keyword=' + keyword + '&order=' + order;
+    }
+    
+    const statusBtns = document.querySelectorAll(".status-btn");
+    statusBtns.forEach((btn) => {
+        btn.addEventListener("click", function() {
+            const memberItem = this.closest(".member-item");
+            const statusElement = memberItem.querySelector(".member-status");
+            const userNoElement = memberItem.querySelector(".user-no");
+            
+            const userNo = userNoElement.value;
+            const newStatus = this.getAttribute("data-status");
+            
+            if (!userNo) {
+                console.error("사용자 번호를 찾을 수 없습니다.");
+                return;
+            }
+
+            $.ajax({
+                url: 'memberUpdate',
+                type: 'post',
+                data: {
+                    userNo: userNo,
+                    status: newStatus
+                },
+                success: function(data) {
+                    console.log(data);
+                    if (data === 'success') {
+                        if (newStatus === 'Y') {
+                            statusElement.textContent = "활성";
+                            statusElement.className = "member-status active";
+                        } else {
+                            statusElement.textContent = "비활성";
+                            statusElement.className = "member-status inactive";
+                        }
+                        alert("회원 상태가 변경되었습니다.");
+                    } else {
+                        alert("회원 상태 변경에 실패했습니다.");
+                    }
+                },
+                error: data => console.log(data)
+            });
+        });
+    });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,775 @@
+.main-search {
+	text-align: center;
+	padding: 1rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+	align-items: center;
+	color: black;
+}
+
+h1 {
+	font-size: 3em;
+	margin-bottom: 5rem;
+}
+
+.search-categories {
+	display: flex;
+	gap: 2rem;
+	margin-bottom: 1rem;
+}
+
+.search-categories button {
+	background: none;
+	border: none;
+	color: black;
+	font-size: 1rem;
+	cursor: pointer;
+	padding: 0.5rem 2rem;
+	border-radius: 20px;
+	min-width: 120px;
+	height: 40px;
+}
+
+.search-categories button.active {
+	background: #0099cc;
+	color: white;
+}
+
+.active{
+	/*background: #0099cc;*/
+	color: white;
+}
+
+.search-bar {
+	width: 100%;
+	max-width: 600px;
+	position: relative;
+}
+
+.search-bar input {
+	width: 65%;
+	padding: 1rem;
+	border-radius: 30px;
+	border: 2px solid #ddd;
+	font-size: 1rem;
+	outline: none;
+}
+
+.search-bar button {
+	position: absolute;
+	right: 5px;
+	top: 50%;
+	transform: translateY(-50%);
+	background: #0099cc;
+	color: white;
+	border: none;
+	padding: 0.7rem 1.5rem;
+	border-radius: 25px;
+	cursor: pointer;
+	height: 40px;
+	display: flex;
+	align-items: center;
+}
+
+.search-bar button:hover {
+	background: #0088cc;
+}
+
+.flight-search-bar {
+	margin-left: 20rem;
+}
+
+.traveler-selection {
+	margin-left: 21.5rem;
+}
+.re-search {
+	margin-left: -17.5rem !important;
+	margin-top: 3rem;
+}
+
+.people-picker {
+	padding: 0.1rem 2rem !important;
+}
+
+/* Flatpickr customization */
+.flatpickr-calendar {
+	margin-top: -4rem;
+	left: 38rem !important;
+	top: 25.6rem !important;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+		"Helvetica Neue", Arial, sans-serif;
+	width: 40rem !important;
+	height: 24rem;
+}
+
+.flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange,
+	.flatpickr-day.selected.inRange, .flatpickr-day.startRange.inRange,
+	.flatpickr-day.endRange.inRange, .flatpickr-day.selected:focus,
+	.flatpickr-day.startRange:focus, .flatpickr-day.endRange:focus,
+	.flatpickr-day.selected:hover, .flatpickr-day.startRange:hover,
+	.flatpickr-day.endRange:hover, .flatpickr-day.selected.prevMonthDay,
+	.flatpickr-day.startRange.prevMonthDay, .flatpickr-day.endRange.prevMonthDay,
+	.flatpickr-day.selected.nextMonthDay, .flatpickr-day.startRange.nextMonthDay,
+	.flatpickr-day.endRange.nextMonthDay {
+	background: #000;
+	color: #fff;
+	border-color: #000;
+}
+
+.flatpickr-day.inRange, .flatpickr-day.prevMonthDay.inRange,
+	.flatpickr-day.nextMonthDay.inRange, .flatpickr-day.today.inRange,
+	.flatpickr-day.prevMonthDay.today.inRange, .flatpickr-day.nextMonthDay.today.inRange,
+	.flatpickr-day:hover, .flatpickr-day.prevMonthDay:hover, .flatpickr-day.nextMonthDay:hover,
+	.flatpickr-day:focus, .flatpickr-day.prevMonthDay:focus, .flatpickr-day.nextMonthDay:focus
+	{
+	background: #f0f0f0;
+	border-color: #f0f0f0;
+}
+
+.flatpickr-current-month .flatpickr-monthDropdown-months {
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.flatpickr-weekday {
+	font-weight: normal;
+	color: #666;
+}
+
+.flatpickr-title {
+	text-align: center;
+	font-size: 16px;
+	font-weight: bold;
+	color: #333;
+	background: #f8f9fa;
+	padding: 10px;
+	border-bottom: 1px solid #ddd;
+}
+
+.traveler-section {
+	position: relative;
+	width: 300px;
+}
+
+.traveler-button {
+	width: 100%;
+	padding: 10px;
+	font-size: 16px;
+	cursor: pointer;
+}
+
+.traveler-selection {
+	position: absolute;
+	top: 100%;
+	right: 10rem;
+	z-index: 1000;
+	background: #f9f9f9;
+	border: 1px solid #ccc;
+	padding: 20px;
+	border-radius: 8px;
+	width: 100% !important;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+.re-search {
+	width: 17rem !important;
+	margin-left: -20rem !important;
+	top: 2rem !important;
+}
+
+.re-travel {
+	width: 9.8rem !important;
+}
+
+re-calendar-container {
+	top: 34rem !important;
+}
+.traveler-category {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+	padding: 10px 0;
+}
+
+.traveler-category span {
+	min-width: 60px;
+	text-align: center;
+}
+
+.category-name {
+	font-weight: bold;
+}
+
+.category-age {
+	font-size: 12px;
+	color: #777;
+}
+
+.traveler-category .category-name {
+	flex: 2;
+	text-align: left;
+	font-weight: bold;
+}
+
+.traveler-category .category-age {
+	flex: 3;
+	text-align: left;
+	color: gray;
+	font-size: 14px;
+}
+
+.traveler-category .decrement, .traveler-category .increment {
+	width: 32px;
+	height: 32px;
+	font-size: 18px;
+	font-weight: bold;
+	border: 1px solid #ccc;
+	background-color: white;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 50%;
+}
+
+.hidden {
+	display:none !important;
+}
+
+.traveler-category .decrement {
+	margin-right: 8px;
+}
+
+.traveler-category .increment {
+	margin-left: 8px;
+}
+
+button.decrement:hover, button.increment:hover {
+	background: #f0f0f0;
+}
+
+.traveler-category .count {
+	flex: 1;
+	text-align: center;
+	font-size: 16px;
+}
+
+.policy-note {
+	margin-top: 20px;
+	font-size: 12px;
+	color: #555;
+}
+
+.buttons {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 20px;
+}
+
+button.reset, button.apply {
+	padding: 10px 20px;
+	border: none;
+	background: #000;
+	color: #fff;
+	font-size: 14px;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+button.reset:hover, button.apply:hover {
+	background: #333;
+}
+
+.dropdown-list {
+    display: none;
+    position: absolute;
+    background: white;
+    border: 1px solid #e0e0e0; /* 연한 테두리 */
+    border-radius: 8px; /* 모서리 둥글게 */
+    max-height: 180px; /* 높이 조정 */
+    overflow-y: auto;
+    width: 220px; /* 너비 조정 */
+    list-style: none;
+    padding: 8px 0; /* 패딩 조정 */
+    margin-top: 3.4rem; /* 마진 조정 */
+    margin-left: 1.6rem; /* 마진 조정 */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+    z-index: 10; /* 다른 요소 위에 표시 */
+    transition: opacity 0.3s ease; /* 트랜지션 효과 추가 */
+}
+/* 스크롤바 스타일링 (웹킷 브라우저) */
+.dropdown-list::-webkit-scrollbar {
+    display: none;
+}
+
+.dropdown-list::-webkit-scrollbar-thumb {
+    background-color: #c0c0c0;
+    border-radius: 4px;
+}
+
+.dropdown-list::-webkit-scrollbar-track {
+    background-color: #f0f0f0;
+    border-radius: 4px;
+}
+
+/* 내부 요소 스타일링 (예시) */
+.dropdown-list li {
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.dropdown-list li:hover {
+    background-color: #f8f8f8;
+}
+
+/* 드롭다운 표시/숨김 시 애니메이션 효과 */
+.dropdown-list.show {
+    display: block;
+    opacity: 1;
+}
+
+.dropdown-list.hide {
+    opacity: 0;
+    transition: opacity 0.3s ease, display 0s 0.3s; /* 숨김 후 display none */
+}
+
+.group {
+	display: flex;
+	margin-left: 10rem;
+}
+
+.re-group {
+	display: flex;
+	margin-left: 10rem;
+}
+
+.search-form {
+	display: flex;
+	gap: 1rem;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+
+.research-form {
+	display: flex;
+	gap: 1rem;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+
+.input-group {
+	display: flex;
+	position: relative;
+	min-width: 250px;
+}
+
+.input-group input {
+	height: 3.2rem;
+	width: 98%;
+	padding: 1rem 1rem 1rem 3rem;
+	border: 1px solid #ddd;
+	border-radius: 100px;
+}
+
+.input-group svg {
+	position: absolute;
+	left: 1rem;
+	margin-top: 10%;
+	margin-right: 5%;
+	transform: translateY(-50%);
+}
+.input-group {
+	display: flex;
+	position: relative;
+	min-width: 250px;
+}
+
+.input-group input {
+	height: 3.2rem;
+	width: 98%;
+	padding: 1rem 1rem 1rem 3rem;
+	border: 1px solid #ddd;
+	border-radius: 100px;
+}
+
+.input-group svg {
+	position: absolute;
+	left: 1rem;
+	margin-top: 10%;
+	margin-right: 5%;
+	transform: translateY(-50%);
+}
+.re-input-group {
+	display: flex;
+	position: relative;
+	min-width: 250px;
+}
+
+.re-input-group input {
+	height: 1.2rem;
+	width: 98%;
+	padding: 1rem 1rem 1rem 3rem;
+	border: 1px solid #ddd;
+	border-radius: 100px;
+}
+
+.re-input-group svg {
+	position: absolute;
+	left: 1rem;
+	margin-top: 8.4%;
+	margin-right: 5%;
+	transform: translateY(-50%);
+}
+
+.date-picker, .traveler-picker {
+	padding: 1rem 2rem;
+	border: 1px solid #ddd;
+	border-radius: 100px;
+	background: white;
+	cursor: pointer;
+	
+}
+
+.search-btn{
+	padding: 1rem 2rem;
+	background: #0099cc;
+	color: white;
+	border: none;
+	border-radius: 100px;
+	cursor: pointer;
+	font-size: 1rem;
+}
+
+.search-btn:hover {
+	background: #0088cc;
+}
+
+.research-btn{
+	padding: 1rem 2rem;
+	background: #0099cc;
+	color: white;
+	border: none;
+	border-radius: 100px;
+	cursor: pointer;
+	font-size: 1rem;
+	
+}
+.research-btn:hover{
+	background: #0088cc;
+}
+.flight-results {
+	max-width: 1050px;
+	margin: 2rem auto;
+	padding: 0 2rem;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+		Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.flight-result-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 4rem;
+}
+.inbound-info {
+	margin-top: 1rem;
+	margin-left: 1rem ;
+}
+.outbound-info{
+	margin-top: 1rem;
+	margin-left: 1rem;
+}
+
+.flight-result-header select {
+	padding: 0.5rem 2rem;
+	border-radius: 20px;
+	border: 1px solid #ddd;
+	outline: none;
+	cursor: pointer;
+}
+
+.flight-container {
+	border: 1px solid #ddd;
+	border-radius: 30px;
+	margin-bottom: 1rem;
+	padding: 1.5rem;
+	background: white;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	width: 50rem;
+}
+
+.flight-info {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 1rem;
+	flex-wrap: wrap;
+}
+
+.airline-info {
+	display: flex;
+	align-items: center;
+	min-width: 150px;
+}
+
+.outbound-info {
+    margin-top: -6rem;
+    margin-left: 3rem;
+}
+.inbound-info {
+    margin-top: 5rem;
+    margin-left: -8rem;
+}
+
+
+.airline-logo {
+	width: 40px;
+	height: 40px;
+	margin-right: 1rem;
+	object-fit: contain;
+}
+
+.flight-details {
+	flex-grow: 1;
+	justify-content: space-between;
+	align-items: center;
+	gap: 1rem;
+	margin: 0 1rem;
+}
+
+.time-info {
+	text-align: center;
+	align-items: center;
+}
+
+.flight-title {
+	display: flex;
+	align-items: center;
+}
+
+.flight-time {
+	font-size: 1.2em;
+	font-weight: 400;
+}
+
+.airport-code {
+	color: black;
+	margin-top: 0.5rem;
+	font-weight: bold;
+	
+}
+
+.airline-info > span {
+/* 	margin-left:3rem; */
+	font-size: 18px;
+	font-weight: bold;
+}
+
+.duration {
+	text-align: center;
+	color: #666;
+}
+
+.price-info {
+	text-align: right;
+	min-width: 200px;
+	display: grid;
+}
+
+.price-title {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.price {
+	font-size: 1.5em;
+	font-weight: bold;
+}
+
+.seats-left {
+	color: #666;
+	font-size: 0.9em;
+	margin-top: 0.5rem;
+}
+
+.view-deal {
+	background-color: #0099cc;
+	color: white;
+	border: none;
+	padding: 0.7rem 1.5rem;
+	border-radius: 25px;
+	cursor: pointer;
+	margin-top: 1rem;
+	font-size: 1rem;
+	transition: background-color 0.2s;
+}
+
+.view-deal:hover {
+	background-color: #0088cc;
+}
+
+.flight-path {
+	position: relative;
+	height: 2px;
+	background: #ddd;
+	flex-grow: 1;
+	margin: 0 1rem;
+}
+
+.flight-path::after {
+	content: '✈';
+	position: absolute;
+	top: -10px;
+	left: 50%;
+	transform: translateX(-50%);
+	color: #666;
+}
+
+.search-results-container {
+	display: flex;
+	max-width: 1200px;
+	margin: 2rem auto;
+	padding: 0 2rem;
+}
+
+.filters {
+	width: 250px;
+	background-color: #fff;
+	padding: 20px;
+	border-radius: 8px;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #ccc;
+	margin-right: 20px;
+	align-self: flex-start;
+}
+
+.filter-group {
+	margin-bottom: 20px;
+}
+
+.filter-group h4 {
+	margin-bottom: 10px;
+}
+
+.filter-group label {
+	display: block;
+	margin-bottom: 5px;
+}
+
+.trip-group {
+	display: flex;
+	align-items: flex-start;
+	gap: 1rem;
+	margin-bottom: 1rem;
+	margin-right: 49.5rem;
+}
+
+.trip-group button {
+	padding: 0.5rem 1rem;
+	border: 1px solid #ddd;
+	border-radius: 20px;
+	background-color: #fff;
+	cursor: pointer;
+	font-size: 1rem;
+	transition: background-color 0.3s, border-color 0.3s;
+}
+
+.trip-group button:hover, .trip-group button.active {
+	background-color: #0099cc;
+	color: white;
+	border-color: #0099cc;
+}
+
+@media
+(
+max-width
+:
+768px)
+{
+.search-results-container {
+	flex-direction: column;
+}
+
+.filters {
+	width: 100%;
+	margin-right: 0;
+	margin-bottom: 20px;
+}
+
+.flight-info {
+	flex-direction: column;
+	align-items: flex-start;
+}
+
+.flight-details {
+	margin: 1rem 0;
+	width: 100%;
+}
+
+.price-info {
+	width: 100%;
+	text-align: left;
+	display: grid;
+}
+}
+
+#loading {
+	width: 45rem;
+	height: 33rem;
+	position: fixed;
+	transform: translate(30%, 0%); /* 추가 */
+	opacity: 0.6;
+	z-index: 99;
+	text-align: center;
+}
+
+#loading-image {
+	position: absolute;
+	z-index: 100;
+	width: 100%;
+	height: 100%;
+}
+
+.show-more-button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.filter-group > label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px; /* 체크박스 간 간격 */
+    cursor: pointer; /* 커서 스타일 변경 */
+}
+
+.filter-group > label > input[type=checkbox] {
+    appearance: none; /* 기본 체크박스 스타일 제거 */
+    width: 18px;
+    height: 18px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    margin-right: 8px; /* 체크박스와 레이블 간 간격 */
+    position: relative;
+    cursor: pointer;
+}
+
+.filter-group > label > input[type=checkbox]:checked::before {
+    content: '\2713'; /* 체크 표시 (유니코드) */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 14px;
+    color: #007bff; /* 체크 표시 색상 */
+}
+
+.filter-group > label > input[type=checkbox]:focus {
+    outline: 2px solid #007bff; /* 포커스 스타일 */
+}

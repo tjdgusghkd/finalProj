@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="topbar">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="/css/header.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<header class="header">
+    <div class="logo-section">
+        <span class="hapla-logo" onclick="location.href='/main'">HAPLA</span>
+    </div>
+    <div class="user-section">
+        <label th:hidden="${session.loginUser != null}" id="login">로그인</label>
+        <img th:src="@{${session.loginUser != null ? session.loginUser.profile : ''}}" alt="User Profile"
+             class="user-profile" id="user-profile-image" th:hidden="${session.loginUser == null}">
+        <input type="hidden" id="accessToken">
+        <div class="header-dropdown">
+            <a onclick="openModal()">내 정보</a>
+            <a href="/comm/list">커뮤니티</a>
+            <a onclick="openTripPlanModal()">여행 일정</a>
+            <a href="/review/main">리뷰 작성</a>
+            
+             <th:block th:if="${session.loginUser != null and session.loginUser.isAdmin == 'Y'}">
+						    <a href="/admin/members">ADMIN</a>
+			</th:block>
+            
+            <a href="#">문의하기</a>
+            <a href="/users/logout">로그아웃</a>
+        </div>
+    </div>
+</header>
+
+<div class="header-modal hidden" role="dialog" id="editModal" align="center">
+    <div class="header-modal-div">
+        <button class="header-close-btn" aria-label="닫기" onclick="closeModal()"></button>
+        <div class="header-banner">HAPLA</div>
+        <form class="edit-form">
+            <div class="profile-image-container">
+                <input type="hidden" name="userNo" id="userNo"
+                       th:value="${session.loginUser != null ? session.loginUser.userNo : ''}">
+                <input type="hidden" name="oriNickname" id="oriNickname"
+                       th:value="${session.loginUser != null ? session.loginUser.nickname : ''}">
+                <input type="hidden" name="profile" id="profileImg"
+                       th:value="${session.loginUser != null ? session.loginUser.profile : ''}">
+                <img th:src="@{${session.loginUser != null ? session.loginUser.profile : '/img/시나모롤.jpg'}}"
+                     alt="프로필 이미지" class="profile-image" id="profileImage">
+                <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+                <button type="button" class="image-upload-btn" onclick="document.getElementById('imageUpload').click()">
+                    프로필 사진 변경
+                </button>
+            </div>
+
+            <label for="nickname" class="header-modal-label">닉네임:</label>
+            <input type="text" id="nickname" name="nickname" class="header-modal-input"
+                   th:value="${session.loginUser != null ? session.loginUser.nickname : ''}" required>
+
+            <button id="save" class="header-modal-button" type="button">변경사항 저장</button>
+            <button type="button" class="delete-account-btn">회원 탈퇴하기</button>
+        </form>
+    </div>
+</div>
+
+<div class="header-modal hidden" role="dialog" id="joinModal" align="center">
+    <div class="header-modal-div">
+        <button class="header-close-btn" aria-label="닫기"></button>
+        <div class="header-banner">HAPLA</div>
+        <form class="header-modal-form" id="joinForm">
+            <input type="hidden" id="loginType" name="type">
+            <input type="hidden" id="tokenId" name="tokenId">
+            <input type="hidden" id="profile" name="profile">
+
+            <img src="" alt="프로필 이미지" class="profile-image" id="loginImage">
+
+            <label for="nickname" class="header-modal-label">이름:</label>
+            <input type="text" id="loginName" name="name" class="header-modal-input" readonly>
+
+            <label for="nickname" class="header-modal-label">닉네임:</label>
+            <input type="text" id="nickname" name="nickname" class="header-modal-input" required>
+
+            <label for="email" class="header-modal-label">이메일:</label>
+            <input type="email" id="email" name="email" class="header-modal-input" required>
+
+            <button id="joinBtn" class="header-modal-button" type="button">가입하기</button>
+        </form>
+    </div>
+</div>
+
+<div class="header-modal hidden" role="dialog" id="loginModal" align="center">
+    <div class="header-modal-div">
+        <button class="header-close-btn" aria-label="닫기"></button>
+        <h1 class="login-title">HAPLA</h1>
+        <p class="login-subtitle">예정부터 일정까지 여행이 더 쉬워집니다</p>
+
+        <button id="google-login-btn" class="login-btn" style="background: white"></button>
+        <button id="kakao-login-btn" class="login-btn"><img src="/img/kakao.png" alt=""></button>
+    </div>
+
+    <!-- Kakao SDK -->
+    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+
+    <!-- Google SDK -->
+    <script src="https://accounts.google.com/gsi/client"></script>
+    <script src="/js/login.js"></script>
+    <script src="/js/join.js"></script>
+</div>
+
+<!-- 여행 일정 모달 -->
+
+<div class="header-modal hidden" role="dialog" id="tripPlanModal" align="center">
+    <div class="header-modal-trip">
+        <button class="header-close-btn" aria-label="닫기"></button>
+        <div class="button-container">
+            <span class="trip-button"><button id="planListBtn" class="planList">일정 목록</button></span>
+            <span class="trip-button"><button id="makePlanBtn" class="makePlan"
+                                              onclick="openCitySearchModal()">일정 생성</button></span>
+        </div>
+    </div>
+</div>
+
+<!-- 도시 검색 모달 -->
+<div class="header-modal hidden" role="dialog" id="citySearchModal" align="center">
+    <div class="header-modal-trip">
+        <button class="header-close-btn" aria-label="닫기"></button>
+        <!-- 검색 입력창 -->
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="도시 이름을 입력하세요..." oninput="filterCities()">
+            <span class="search-icon">
+               <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                    fill="#5f6368"><path
+                       d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/></svg>
+            </span>
+        </div>
+
+        <!-- 검색 결과 리스트 -->
+        <ul id="cityList"></ul>
+    </div>
+</div>
+
+<script src="/js/header.js"></script>
+<script src="/js/trip.js"></script>
+
+<!-- Google Places API 스크립트 -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCEHjTtVqBclz07ADqbkGjqGIe94Cq-S60&libraries=places"></script>
+
+</body>
+</html>

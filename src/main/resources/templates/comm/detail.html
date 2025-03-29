@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HAPLA 커뮤니티</title>
+<link href="/css/detail.css" rel="stylesheet" type="text/css">
+<script src="https://code.jquery.com/jquery-3.7.1.js"
+integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+crossorigin="anonymous"></script>
+<style>
+.report-btn {
+  background: linear-gradient(to right, #ff7e5f, #f76c6c);
+   color: white;
+   border: none;
+   padding: 12px 18px;
+    font-size: 16px;
+   border-radius: 8px;
+   cursor: pointer;
+   margin-left: 10px;
+ 	display : flex;
+ 	width: 90px;
+    height: 40px; 
+    align-items: center;
+    justify-content: center;
+}
+
+.report-btn:disabled {
+   background-color: #cccccc;
+   cursor: not-allowed;
+}
+.report-message {
+   color: #f44336;
+   font-size: 12px;
+   margin-top: 5px;
+}
+.report-modal {
+   display: none;
+   position: fixed;
+   z-index: 10;
+   left: 0;
+   top: 0;
+   width: 100%;
+   height: 100%;
+   overflow: auto;
+   background-color: rgba(0,0,0,0.4);
+   align-items: center;
+   justify-content: center;
+}
+.report-modal-content {
+   background-color: #fefefe;
+   margin: auto;
+   padding: 20px;
+   border: 1px solid #888;
+   width: 50%;
+   max-width: 500px;
+   border-radius: 5px;
+}
+.report-form-group {
+   margin-bottom: 15px;
+}
+.report-form-label {
+   display: block;
+   margin-bottom: 5px;
+   font-weight: bold;
+}
+.report-form-input, .report-form-textarea {
+   width: 100%;
+   padding: 8px;
+   border: 1px solid #ddd;
+   border-radius: 4px;
+}
+.report-form-textarea {
+   resize: vertical;
+   min-height: 100px;
+}
+.report-form-buttons {
+   text-align: right;
+}
+.report-form-submit, .report-form-cancel {
+   padding: 8px 16px;
+   border: none;
+   border-radius: 4px;
+   cursor: pointer;
+   margin-left: 10px;
+}
+.report-form-submit {
+   background-color: #f44336;
+   color: white;
+}
+.report-form-cancel {
+   background-color: #ccc;
+}
+</style>
+</head>
+<body>
+<div th:replace="~{common/header.html :: topbar}"></div>
+<main>
+	<section class="banner">
+		<img src="/img/communityBanner.png" alt="커뮤니티 배너">
+		<div class="overlay">
+			<h1>여행의 설렘을 함께 나누는 공간에서 당신의 정보를 공유해보세요</h1>
+		</div>
+	</section>
+	<section class="community">
+		<form class="needs-validation" method="POST" id="detailForm">
+			<input type="hidden" name="userNo" id="userNo"
+				th:value="${session.loginUser != null ? session.loginUser.userNo : ''}">
+			<input type="hidden" name="commNo" th:value="${c.commNo}"> <input
+				type="hidden" name="page" th:value="${page}">
+			<h2 style="display: inline-block;">커뮤니티</h2>
+			<div class="buttons">
+				<button id="likeBtn" class="btn btn-outline-danger btn-sm"
+					style="margin-left: 10px;">
+					<!-- 좋아요가 눌리지 않은 상태(빈 하트) -->
+					<svg
+						th:attr="style=${isLiked == false} ? 'display: inline;' : 'display: none;'"
+						fill="#fcfcfc" height="20px" width="20px" version="1.1"
+						id="heart-outline" xmlns="http://www.w3.org/2000/svg"
+						xmlns:xlink="http://www.w3.org/1999/xlink"
+						viewBox="0 0 471.701 471.701" xml:space="preserve">
+			        <g>
+			            <path
+							d="M433.601,67.001c-24.7-24.7-57.4-38.2-92.3-38.2s-67.7,13.6-92.4,38.3l-12.9,12.9l-13.1-13.1
+			                c-24.7-24.7-57.6-38.4-92.5-38.4c-34.8,0-67.6,13.6-92.2,38.2c-24.7,24.7-38.3,57.5-38.2,92.4c0,34.9,13.7,67.6,38.4,92.3
+			                l187.8,187.8c2.6,2.6,6.1,4,9.5,4c3.4,0,6.9-1.3,9.5-3.9l188.2-187.5c24.7-24.7,38.3-57.5,38.3-92.4
+			                C471.801,124.501,458.301,91.701,433.601,67.001z M414.401,232.701l-178.7,178l-178.3-178.3c-19.6-19.6-30.4-45.6-30.4-73.3
+			                s10.7-53.7,30.3-73.2c19.5-19.5,45.5-30.3,73.1-30.3c27.7,0,53.8,10.8,73.4,30.4l22.6,22.6c5.3,5.3,13.8,5.3,19.1,0l22.4-22.4
+			                c19.6-19.6,45.7-30.4,73.3-30.4c27.6,0,53.6,10.8,73.2,30.3c19.6,19.6,30.3,45.6,30.3,73.3
+			                C444.801,187.101,434.001,213.101,414.401,232.701z" />
+			        </g>
+			    </svg>
+
+					<!-- 좋아요가 눌린 상태(빨간색 하트) -->
+					<svg
+						th:attr="style=${isLiked == true} ? 'display: inline;' : 'display: none;'"
+						height="20px" width="20px" version="1.1" id="heart-fill"
+						xmlns="http://www.w3.org/2000/svg"
+						xmlns:xlink="http://www.w3.org/1999/xlink"
+						viewBox="0 0 471.701 471.701" xml:space="preserve">
+				    <g>
+				        <path fill="red"
+							d="M433.601,67.001c-24.7-24.7-57.4-38.2-92.3-38.2s-67.7,13.6-92.4,38.3l-12.9,12.9l-13.1-13.1
+				            c-24.7-24.7-57.6-38.4-92.5-38.4c-34.8,0-67.6,13.6-92.2,38.2c-24.7,24.7-38.3,57.5-38.2,92.4c0,34.9,13.7,67.6,38.4,92.3
+				            l187.8,187.8c2.6,2.6,6.1,4,9.5,4c3.4,0,6.9-1.3,9.5-3.9l188.2-187.5c24.7-24.7,38.3-57.5,38.3-92.4
+				            C471.801,124.501,458.301,91.701,433.601,67.001z" />
+				    </g>
+				</svg>
+
+					<span id="likeCount" th:text="${c != null ? c.likes : 0}"></span>
+				</button>
+				<!-- 게시글 신고 버튼 추가 -->
+				<button id="reportPostBtn" class="report-btn" type="button" th:if="${session.loginUser != null && session.loginUser.userNo != c.userNo}">
+				    신고
+				</button>
+				<div id="postReportMsg" class="report-message" style="display: none;">이미 신고한 게시글입니다.</div>
+				<button class="cancel-button" type="button"
+					onclick="goBackAndRefresh();">목록</button>
+			</div>
+
+			<table>
+				<tr>
+					<th>제목</th>
+					<td colspan="3" width="400px"
+						th:text="${c != null ? c.title : '제목 없음'}"></td>
+				</tr>
+				<tr>
+					<th width="50px">등록자</th>
+					<td>[[${c.nickname}]]</td>
+				</tr>
+				<tr>
+					<th width="50px">등록일</th>
+					<td
+						th:text="${c != null and c.createDate != null ? #dates.format(c.createDate, 'yyyy-MM-dd') : '날짜 없음'}"></td>
+				</tr>
+				<tr>
+					<th>조회수</th>
+					<td th:text="${c != null ? c.views : 0}"></td>
+				</tr>
+				<tr>
+					<td colspan="9" th:utext="${c != null ? c.commContent : 0}"></td>
+					<!-- ✅ 수정 -->
+				</tr>
+			</table>
+			<div class="buttons">
+				<th:block
+					th:if="${session.loginUser != null && session.loginUser.userNo == c.userNo}">
+					<button class="updateForm" type="button" id="updateForm">수정</button>
+					<button class="deleteModal" type="button" id="deleteModal">삭제</button>
+				</th:block>
+			</div>
+
+			<div class="input-group">
+				<textarea class="form-control" rows="1" id="replyContent"
+					style="resize: none;"></textarea>
+				<button class="btn btn-outline-success btn-lg" id="replySubmit"
+					th:disabled="${session.loginUser == null}">SUBMIT</button>
+			</div>
+			<br>
+			<table class="table" id="replyTable">
+				<thead>
+					<tr>
+						<th>작성자</th>
+						<th>작성내용</th>
+						<th>작성일자</th>
+						<th></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="r: ${list}" th:id="'reply-' + ${r.replyNo}">
+						<td>[[${r.nickname}]]</td>
+						<td><span th:text="${r.replyContent}"></span></td>
+						<td>[[${r.createDate}]]</td>
+						<td><th:block
+								th:if="${session.loginUser ne null && r.userNo ne session.loginUser.userNo}">
+								<input type="hidden" th:value="${r.replyNo}" name="replyNo">
+								<button class="report-btn report-reply-btn" type="button">신고</button>
+								<div class="report-message" style="display: none;">이미 신고한 댓글입니다.</div>
+							</th:block></td>
+						<td><th:block
+								th:if="${session.loginUser != null && r.userNo eq session.loginUser.userNo}">
+								<input type="hidden" th:value="${r.replyNo}" name="replyId">
+								<span class="updel"> <!-- 수정 아이콘 (연필 모양) --> <svg
+										xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+										fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+										<path
+											d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" /></svg>
+								</span>
+                           &nbsp;
+                           <span class="updel"> <!-- 삭제 아이콘 (쓰레기통 모양) -->
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+										fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+										<path
+											d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5" /></svg>
+								</span>
+								<input type="hidden" th:value="${r.replyContent}">
+								<!-- 댓글 수정은 안 하고 원래 댓글로 돌려놓으려고 할 때 사용 -->
+							</th:block></td>
+					</tr>
+				</tbody>
+			</table>
+
+		</form>
+	</section>
+</main>
+
+<!-- 삭제 모달 -->
+<div class="modal fade" tabindex="-1" role="dialog" id="modalChoice">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<!-- ✅ 중앙 정렬 클래스 추가 -->
+		<div class="modal-content rounded-3 shadow">
+			<div class="modal-body p-4 text-center">
+				<h3 class="mb-0">정말 삭제하시겠습니까?</h3>
+				<p class="mb-0">삭제 후 게시글은 되돌릴 수 없습니다.</p>
+			</div>
+			<div class="buttons" style="margin-right: 80px;">
+				<button type="button" class="yes-button" id="yes-button">
+					<strong>네</strong>
+				</button>
+				<button type="button" class="no-button" id="no-button"
+					data-bs-dismiss="modal">아니오</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- 신고 모달 -->
+<div id="reportModal" class="report-modal">
+    <div class="report-modal-content">
+        <h2>신고하기</h2>
+        <form id="reportForm">
+            <input type="hidden" id="reportCategory" name="reportCategory" value="">
+            <input type="hidden" id="contentNo" name="contentNo" value="">
+            
+            <div class="report-form-group">
+                <label for="reportTitle" class="report-form-label">신고 제목</label>
+                <input type="text" id="reportTitle" name="reportTitle" class="report-form-input" placeholder="신고 제목을 입력하세요." required>
+            </div>
+            
+            <div class="report-form-group">
+                <label for="reportContent" class="report-form-label">신고 내용</label>
+                <textarea id="reportContent" name="reportContent" class="report-form-textarea" placeholder="신고 내용을 상세히 입력하세요." required></textarea>
+            </div>
+            
+            <div class="report-form-buttons">
+                <button type="button" class="report-form-cancel" id="cancelReport">취소</button>
+                <button type="submit" class="report-form-submit" id="submitReport">신고하기</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div th:replace="~{common/footer.html :: foot}"></div>
+
+<script th:inline="javascript">
+function goBackAndRefresh() {
+    const backUrl = '/comm/list';
+    window.location.href = backUrl + (backUrl.includes('?') ? '&' : '?') + 'refresh=true';
+}
+
+window.addEventListener('load', () => {
+       const form = document.getElementById('detailForm');
+       const updateButton = document.getElementById('updateForm'); // 수정 버튼
+       const deleteButton = document.getElementById('deleteModal'); // 삭제 버튼
+       const deleteConfirm = document.getElementById('yes-button'); // 삭제 확인 버튼
+       const deleteModal = document.getElementById('modalChoice'); // 삭제 모달
+       const closeModalButtons = document.querySelectorAll("[data-bs-dismiss='modal']"); // 취소 버튼들
+
+       // 🔹 게시글 수정 버튼 클릭 시
+       if (updateButton) {
+           updateButton.addEventListener('click', () => {
+               form.action = '/comm/updForm';
+               form.submit();
+           });
+       }
+
+       // 🔹 삭제 버튼 클릭 시 모달 표시
+       if (deleteButton) {
+           deleteButton.addEventListener('click', () => {
+               deleteModal.style.display = "flex"; // 모달 보이기
+           });
+       }
+
+       // 🔹 모달 내 취소 버튼 클릭 시 닫기
+       closeModalButtons.forEach(button => {
+           button.addEventListener("click", () => {
+               deleteModal.style.display = "none"; // 모달 숨기기
+           });
+       });
+
+       // 🔹 모달 외부 클릭 시 닫기
+       window.addEventListener("click", (event) => {
+           if (event.target === deleteModal) {
+               deleteModal.style.display = "none";
+           }
+       });
+
+       // 🔹 삭제 확인 버튼 클릭 시 폼 제출 (게시글 삭제)
+       if (deleteConfirm) {
+           deleteConfirm.addEventListener("click", () => {
+               form.action = '/comm/delete';
+               form.submit();
+           });
+       }
+       
+       // 게시글 신고 기능 확인
+       checkReportStatus();
+       
+       // 댓글 신고 기능 확인
+       checkReplyReportStatus();
+   });
+
+// 게시글 신고 상태 확인
+function checkReportStatus() {
+    const reportBtn = document.getElementById("reportPostBtn");
+    if (reportBtn) {
+        const commNo = /*[[${c.commNo}]]*/1;
+        // AJAX로 이미 신고했는지 확인
+        $.ajax({
+            url: '/report/check',
+            type: 'GET',
+            data: {
+                reportCategory: 'C',
+                contentNo: commNo
+            },
+            success: function(response) {
+                if (response.isReported) {
+                    reportBtn.disabled = true;
+                    document.getElementById("postReportMsg").style.display = "block";
+                } else {
+                    // 신고 버튼 클릭 이벤트 추가
+                    reportBtn.addEventListener("click", function() {
+                        showReportModal("C", commNo);
+                    });
+                }
+            },
+            error: function(xhr) {
+                console.error("신고 상태 확인 중 오류 발생:", xhr);
+                // 오류 발생 시에도 버  {
+                console.error("신고 상태 확인 중 오류 발생:", xhr);
+                // 오류 발생 시에도 버튼 활성화 유지
+                reportBtn.addEventListener("click", function() {
+                    showReportModal("C", commNo);
+                });
+            }
+        });
+    }
+}
+
+// 댓글 신고 상태 확인
+function checkReplyReportStatus() {
+    const replyBtns = document.querySelectorAll(".report-reply-btn");
+    
+    replyBtns.forEach(btn => {
+        // 부모 요소 찾기 (td)
+        const tdElement = btn.closest("td");
+        if (!tdElement) return;
+        
+        // td 내에서 replyNo 입력 필드 찾기
+        const replyNoInput = tdElement.querySelector("input[name='replyNo']");
+        if (!replyNoInput) return;
+        
+        const replyNo = replyNoInput.value;
+        
+        // AJAX로 이미 신고했는지 확인
+        $.ajax({
+            url: '/report/check',
+            type: 'GET',
+            data: {
+                reportCategory: 'R',
+                contentNo: replyNo
+            },
+            success: function(response) {
+                if (response.isReported) {
+                    btn.disabled = true;
+                    const msgElement = tdElement.querySelector(".report-message");
+                    if (msgElement) {
+                        msgElement.style.display = "block";
+                    }
+                } else {
+                    // 신고 버튼 클릭 이벤트 추가
+                    btn.addEventListener("click", function() {
+                        showReportModal("R", replyNo);
+                    });
+                }
+            },
+            error: function(xhr) {
+                console.error("댓글 신고 상태 확인 중 오류 발생:", xhr);
+                // 오류 발생 시에도 버튼 활성화 유지
+                btn.addEventListener("click", function() {
+                    showReportModal("R", replyNo);
+                });
+            }
+        });
+    });
+}
+
+// 신고 모달 표시
+function showReportModal(category, contentNo) {
+    const modal = document.getElementById("reportModal");
+    document.getElementById("reportCategory").value = category;
+    document.getElementById("contentNo").value = contentNo;
+    modal.style.display = "flex";
+    
+    // 취소 버튼 이벤트 추가
+    document.getElementById("cancelReport").onclick = function() {
+        modal.style.display = "none";
+    };
+    
+    // 모달 외부 클릭 시 닫기
+    modal.onclick = function(event) {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    };
+    
+    // 폼 제출 이벤트 설정
+    document.getElementById("reportForm").onsubmit = function(event) {
+        event.preventDefault();
+        submitReport();
+    };
+}
+
+// 신고 제출
+function submitReport() {
+    const category = document.getElementById("reportCategory").value;
+    const contentNo = document.getElementById("contentNo").value;
+    const title = document.getElementById("reportTitle").value;
+    const content = document.getElementById("reportContent").value;
+    
+    $.ajax({
+        url: '/report/submit',
+        type: 'POST',
+        data: {
+            reportTitle: title,
+            reportContent: content,
+            reportCategory: category,
+            contentNo: contentNo
+        },
+        success: function(response) {
+            alert(response.message);
+            document.getElementById("reportModal").style.display = "none";
+            
+            // 버튼 비활성화 및 메시지 표시
+            if (category === 'C') {
+                const btn = document.getElementById("reportPostBtn");
+                btn.disabled = true;
+                document.getElementById("postReportMsg").style.display = "block";
+            } else {
+                // 댓글의 경우
+                const replyBtns = document.querySelectorAll(".report-reply-btn");
+                replyBtns.forEach(btn => {
+                    const tdElement = btn.closest("td");
+                    if (!tdElement) return;
+                    
+                    const replyNoInput = tdElement.querySelector("input[name='replyNo']");
+                    if (!replyNoInput) return;
+                    
+                    const replyNo = replyNoInput.value;
+                    if (replyNo == contentNo) {
+                        btn.disabled = true;
+                        const msgElement = tdElement.querySelector(".report-message");
+                        if (msgElement) {
+                            msgElement.style.display = "block";
+                        }
+                    }
+                });
+            }
+            
+            // 관리자 알림이 필요한 경우 (3회 이상 신고)
+            if (response.reportCount >= 2) {
+                console.log("관리자에게 신고가 등록되었습니다.");
+            }
+        },
+        error: function(xhr) {
+            console.error("신고 처리 중 오류:", xhr);
+            let errorMsg = "신고 처리 중 오류가 발생했습니다.";
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                errorMsg = xhr.responseJSON.message;
+            }
+            alert(errorMsg);
+        }
+    });
+}
+
+const tbody = document.querySelector('#replyTable tbody');
+
+/*<![CDATA[*/
+document.getElementById('replySubmit').addEventListener('click', e => {
+	e.preventDefault();
+	$.ajax({
+		url: '/comm/reply',
+		type: 'post',
+		dataType: 'json',
+		data: {
+			replyContent:document.getElementById('replyContent').value,
+			commNo:/*[[${c.commNo}]]*/1,
+			nickname:/*[[${c.nickname}]]*/'user01',
+			userNo:/*[[${session.loginUser != null ? session.loginUser.userNo : ''}]]*/1
+		},
+		success: data => {
+			console.log(data);
+			
+			tbody.innerHTML = '';
+			for(const r of data){
+				const tr = document.createElement('tr');
+				
+				const writerTd = document.createElement('td');
+				const writerVal = document.createTextNode(r.nickname);
+				writerTd.append(writerVal);
+				
+				const contentTd = document.createElement('td');
+				contentTd.innerText = r.replyContent;
+				
+				tr.append(writerTd);
+				tr.append(contentTd);
+				tr.innerHTML += '<td>' + r.updateDate + '</td>';
+				
+				const askTd = document.createElement('td');  
+
+				if (r.userNo != /*[[${session.loginUser != null ? session.loginUser.userNo : ''}]]*/1) {
+				    askTd.innerHTML = '<input type="hidden" value="'+ r.replyNo +'" name="replyNo"><button class="report-btn report-reply-btn" type="button">신고</button><div class="report-message" style="display: none;">이미 신고한 댓글입니다.</div>';
+				}
+				tr.append(askTd);
+				
+				
+				const iconTd = document.createElement('td');  // <td></td>
+				if(r.userNo == /*[[${session.loginUser != null ? session.loginUser.userNo : ''}]]*/1){
+					iconTd.innerHTML = '<input type="hidden" value="'+ r.replyNo +'" name="replyId"><span class="updel"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16"><path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/></svg></span>&nbsp;&nbsp;<span class="updel"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16"><path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/></svg></span><input type="hidden" value="' + r.replyContent + '">';
+				}
+				tr.append(iconTd);
+				
+				tbody.append(tr);
+			}
+			document.getElementById('replyContent').value= '';
+			
+			// 새로 추가된 댓글에 대한 신고 버튼 기능 추가
+			checkReplyReportStatus();
+		},
+		error: data => console.log(data)
+	});
+});
+/*]]>*/
+
+tbody.addEventListener('click', e => {
+    const eventTarget = e.target;
+    const targetTagName = eventTarget.tagName.toLowerCase();
+    let targetSVG = null;
+    switch(targetTagName){
+        case 'span': targetSVG = eventTarget.children[0]; break;
+        case 'svg': targetSVG = eventTarget;  break;
+        case 'path': targetSVG = eventTarget.parentElement;
+    }
+
+    const myTd = targetSVG ? targetSVG.closest('td') : null;
+    if (!myTd) return;
+    
+    const tr = myTd.closest('tr');
+    if (!tr) return;
+    
+    const contentTd = tr.querySelector('td:nth-child(2)');
+    if (!contentTd) return;
+    
+    const replyIdInput = myTd.querySelector('input[name="replyId"]');
+    if (!replyIdInput) return;
+    
+    const replyId = replyIdInput.value;
+
+    if(targetSVG != null){
+    	if(targetSVG.className.baseVal.includes("pencil")){ // 클릭한 targetSVG가 연필일 때
+           const beforeCheckArr = document.getElementsByClassName('bi-check-lg');
+	    if(beforeCheckArr.length > 0){
+	  		const beforeCheckTd = beforeCheckArr[0].parentElement.parentElement;
+	  		beforeCheckTd.parentElement.children[1].innerHTML = beforeCheckTd.children[3].value; // content 가 담겨져 있는 hidden
+	  		beforeCheckTd.children[1].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16"><path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/></svg>';
+	  		beforeCheckTd.children[2].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16"><path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/></svg>';
+	  	}
+	     contentTd.innerHTML = '<textarea rows="2" cols="30" style="resize:none;">' + contentTd.innerText + '</textarea>';
+	     myTd.children[1].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16"><path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022"/></svg>';
+	     myTd.children[2].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16"><path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/></svg>';
+           } else if(targetSVG.className.baseVal.includes("trash")){ 
+            if(confirm('정말 삭제하시겠습니까?')){
+                $.ajax({
+                    url: '/comm/reply',
+                    type: 'delete',
+                    contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                    data: { replyNo: replyId },
+                    success: function(data) {
+                        if (data == 1) {
+                            alert('댓글이 성공적으로 삭제되었습니다.');
+                            tr.remove();
+                        } else {
+                            alert('댓글 삭제 중 오류가 발생했습니다.');
+                        }
+                    },
+                    error: function(data) {
+                        alert('서버와의 통신 중 오류가 발생했습니다.');
+                    }
+                });
+            }
+        } else if(targetSVG.className.baseVal.includes('check')){
+        	console.log("체크 버튼 클릭 확인");
+
+            const textarea = contentTd.querySelector('textarea');
+            if (!textarea) return;
+            
+            const replyContent = textarea.value.trim();
+            const replyNo = replyId;
+
+            if (!replyContent) {
+                alert("댓글 내용을 입력해주세요.");
+                return;
+            }
+
+            console.log("보내는 데이터 확인: ", {replyNo: replyNo, replyContent: replyContent});
+      	   // 수정 완료
+      	   $.ajax({
+                 url: '/comm/reply',
+                 type: 'put',
+                 data: {replyNo : replyNo, replyContent : replyContent},
+      		   	 success: data => {
+      			  console.log(data);
+      			  if(data == 1){
+      					contentTd.innerHTML = replyContent;
+          		  		myTd.children[1].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16"><path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/></svg>'
+          		  		myTd.children[2].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16"><path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/></svg>'
+      			  		myTd.children[3].value = contentTd.innerText;
+      			  } else {
+      				  alert("댓글 수정 중 오류가 발생했습니다.");
+      			  }
+      		   },
+      		   error: data => console.log(data)
+      	   });
+         } else if(targetSVG.className.baseVal.includes('x')){
+      	   // 수정 취소 : 연필-삭제 view로 전환
+      	   contentTd.innerHTML = myTd.children[3].value;
+         	   
+             myTd.children[1].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16"><path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/></svg>';
+             myTd.children[2].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16"><path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/></svg>';
+         }
+      } 
+         
+   });
+
+document.addEventListener("DOMContentLoaded", function() {
+    const likeBtn = document.getElementById("likeBtn");
+    const likeCount = document.getElementById("likeCount");
+    const userNo = document.getElementById("userNo").value;
+    const likeIcon = document.querySelector("#likeBtn svg path");
+
+    likeBtn.addEventListener("click", function(event) {
+        if (!userNo) { // 로그인 여부 확인
+            alert("좋아요를 누르려면 로그인이 필요합니다.");
+            return;
+        }
+
+        $.ajax({
+            url: "/comm/like", 
+            type: "POST",
+            data: { 
+                commNo: /*[[${c.commNo}]]*/ 1, 
+                userNo: /*[[${c.userNo}]]*/ 1
+            },
+            success: function(response) {
+                // 좋아요 개수 업데이트
+                $("#likeCount").text(response.likes);
+
+                // 좋아요 상태 확인 및 하트 색상 변경
+                if (response.isLiked) {  
+                    // 좋아요가 눌린 상태 - 빨간 하트 보여주기
+                    $("#heart-outline").hide();
+                    $("#heart-fill").show();
+                } else {
+                    // 좋아요가 눌리지 않은 상태 - 빈 하트 보여주기
+                    $("#heart-fill").hide();
+                    $("#heart-outline").show();
+                }
+            },
+            error: function(xhr) {
+                console.log("에러 상태 코드:", xhr.status);
+                console.log("서버 응답:", xhr.responseText);
+                alert("좋아요 처리 중 오류가 발생했습니다.\n" + xhr.responseText);
+            }
+        });
+        
+        event.preventDefault();
+    });
+});
+
+//앵커 링크로 이동 후 해당 댓글 하이라이트
+document.addEventListener('DOMContentLoaded', function() {
+    // URL에서 해시 부분 가져오기
+    const hash = window.location.hash;
+    if (hash && hash.startsWith('#reply-')) {
+        const replyElement = document.querySelector(hash);
+        if (replyElement) {
+            // 해당 댓글로 스크롤
+            replyElement.scrollIntoView();
+            
+            // 하이라이트 효과 추가
+            replyElement.style.backgroundColor = '#fffde7';
+            
+            // 3초 후 하이라이트 제거
+            setTimeout(function() {
+                replyElement.style.transition = 'background-color 1s';
+                replyElement.style.backgroundColor = '';
+            }, 3000);
+        }
+    }
+});
+</script>
+</body>
+</html>
+

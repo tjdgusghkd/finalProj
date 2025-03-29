@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hapla.flights.model.mapper.FlightMapper">
+	<select id="searchList" resultType="Airport">
+	    <bind name="searchQuery" value="'%' + query + '%'" />
+	    SELECT * 
+	    FROM airport_info
+	    WHERE eng_airport_name LIKE #{searchQuery}
+	       OR kor_airport_name LIKE #{searchQuery}
+	       OR eng_city_name LIKE #{searchQuery}
+	       OR kor_city_name LIKE #{searchQuery}
+	       OR kor_country_name LIKE #{searchQuery}
+	       OR eng_country_name LIKE #{searchQuery}
+	    ORDER BY view_count DESC
+	</select>
+	<update id="countPlus">
+		update airport_info
+		set view_count = view_count + 1
+		where iata_code = #{departureCode} or iata_code = #{arrivalCode}
+	</update>
+</mapper>

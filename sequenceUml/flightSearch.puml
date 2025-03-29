@@ -1,0 +1,67 @@
+@startuml
+actor User
+participant "Frontend (JS)" as Frontend
+participant "Backend (FlightController)" as Backend
+participant "FlightService" as Service
+participant "Amadeus API" as AmadeusAPI
+participant "TAGO API" as TagoAPI
+participant "ExchangeRate API" as ExchangeAPI
+
+== 공항 검색 ==
+User -> Frontend: 출발지/도착지 입력 (query)
+Frontend -> Backend: /flight/search?query={query}
+Backend -> Service: searchList(query)
+Service --> Backend: 공항 목록 (Airport[])
+Backend --> Frontend: JSON 공항 목록
+Frontend -> User: 드롭다운 표시 (IATA 코드 포함)
+
+== 날짜 및 여행자 선택 ==
+User -> Frontend: 날짜 선택 (flatpickr: range/single)
+Frontend -> Frontend: mode 설정, 날짜 포맷팅 (YYYY-MM-DD)
+User -> Frontend: 여행자 수 선택 (increment/decrement)
+Frontend -> Frontend: 총 여행자 수 업데이트 (max 9)
+
+== 항공편 검색 요청 ==
+User -> Frontend: 검색 버튼 클릭 (.search-btn)
+Frontend -> Backend: /flight/flightSearch (departureName, arrivalName, dates, travelers)
+Backend -> Backend: IATA 코드 추출 (departureCode, arrivalCode)
+alt 날짜 유효성 검사 실패
+    Backend --> Frontend: error: "잘못된 날짜 형식"
+    Frontend -> User: flightSearchResult 페이지 (에러 메시지)
+else 날짜 유효성 검사 성공
+    Backend -> Backend: isDomesticFlight(departureCode, arrivalCode)
+    alt 국내선 (isDomestic)
+        Backend -> TagoAPI: getFlightOpratInfoList (depAirportId, arrAirportId, depPlandTime)
+        TagoAPI --> Backend: 국내선 항공편 정보 (JSON)
+        Backend -> Backend: getDomesticFlightOffers (파싱 및 가공)
+    else 국제선
+        Backend -> AmadeusAPI: oauth2/token (client_id, client_secret)
+        AmadeusAPI --> Backend: access_token
+        alt 토큰 획득 실패
+            Backend --> Frontend: error: "인증 오류"
+            Frontend -> User: flightSearchResult 페이지 (에러 메시지)
+        else 토큰 획득 성공
+            Backend -> AmadeusAPI: flight-offers (origin, destination, dates, adults)
+            AmadeusAPI --> Backend: 국제선 항공편 정보 (JSON)
+            Backend -> ExchangeAPI: latest/EUR
+            ExchangeAPI --> Backend: 환율 (EUR -> KRW)
+            Backend -> Backend: getFlightOffers (가격 변환 및 가공)
+        end
+    end
+    Backend -> Backend: 중복 제거 (uniqueFlightOffers)
+    Backend -> Service: countPlus(iataMap)
+    Backend --> Frontend: flightOffers, airlineList
+    Frontend -> User: flightSearchResult 페이지 렌더링
+end
+
+== 항공편 필터링 ==
+User -> Frontend: 필터 선택 (layover, out/in-departure-time, airline)
+Frontend -> Frontend: applyFilter(flightSearchResult)
+Frontend -> User: 필터링된 항공편 표시 (hidden 클래스 토글)
+
+== 항공편 정렬 ==
+User -> Frontend: 정렬 기준 선택 (best, price, duration)
+Frontend -> Frontend: sortFlights(criterion)
+Frontend -> User: 정렬된 항공편 표시
+
+@enduml

@@ -1,0 +1,110 @@
+/* 관리자 대시보드 통계 페이지 스타일 */
+:root {
+  --primary-color: #4361ee;
+  --secondary-color: #3f37c9;
+  --text-primary: #333;
+  --text-secondary: #666;
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-accent: #f1f3f9;
+  --border-color: #e9ecef;
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --radius-sm: 4px;
+  --radius-md: 8px;
+}
+
+/* 개선된 그래프 컨테이너 */
+.chart-card {
+  background-color: var(--bg-primary);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  padding: 24px;
+  margin-bottom: 24px;
+  transition: all 0.3s ease;
+}
+
+.chart-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.chart-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: "Noto Sans KR", sans-serif;
+}
+
+/* 개선된 캘린더 컨테이너 */
+.calendar-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.calendar-container {
+  width: 100%;
+  position: relative;
+  background-color: var(--bg-primary);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+.calendar-container:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.calendar-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 15px;
+  position: relative;
+  padding-left: 0;
+  top: 0;
+  background: none;
+  font-family: "Noto Sans KR", sans-serif;
+}
+
+/* 풀캘린더 커스텀 스타일 */
+.fc .fc-toolbar-title {
+  font-size: 16px !important;
+  font-weight: 600;
+}
+
+.fc .fc-button {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  font-size: 12px;
+  padding: 6px 12px;
+}
+
+.fc .fc-button:hover {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+}
+
+.fc .fc-daygrid-day-number {
+  font-size: 12px;
+  padding: 4px;
+}
+
+.fc .fc-daygrid-day.fc-day-today {
+  background-color: rgba(67, 97, 238, 0.1);
+}
+
+.fc .fc-event {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  font-size: 11px;
+  padding: 2px 4px;
+}
+

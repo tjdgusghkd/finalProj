@@ -1,0 +1,65 @@
+@startuml
+actor User
+participant "Frontend (JS)" as Frontend
+participant "Backend (Controller)" as Backend
+participant "UsersService" as Service
+participant "R2 Storage" as R2
+
+== 프로필 이미지 업로드 ==
+User -> Frontend: 이미지 선택 (#imageUpload)
+Frontend -> Backend: POST /upload (FormData: image)
+Backend -> R2: putObject (renameFileName, image)
+R2 --> Backend: 업로드 완료
+Backend --> Frontend: {imagePath: R2_PUBLIC_URL + renameFileName}
+Frontend -> Frontend: profileImage.src 업데이트
+alt 이미지 로드 성공
+    Frontend -> User: 이미지 표시
+else 이미지 로드 실패
+    Frontend -> Frontend: profileImage.src = '/img/시나모롤.jpg'
+    Frontend -> User: alert("이미지 업로드 실패")
+end
+
+== 사용자 정보 수정 ==
+User -> Frontend: 저장 버튼 클릭 (#save)
+Frontend -> Frontend: 닉네임 비교 (oriNickname vs nickname)
+alt 닉네임 동일
+    Frontend -> Backend: POST /updateUser (JSON: userData)
+else 닉네임 다름
+    Frontend -> Backend: POST /checkNickname (FormData: nickname)
+    Backend -> Service: checkNickname(nickname)
+    Service --> Backend: result (0: 사용 가능, >0: 중복)
+    Backend --> Frontend: {result: "success" or "fail"}
+    alt 중복 (result == "fail")
+        Frontend -> User: alert("중복된 닉네임입니다")
+    else 사용 가능
+        Frontend -> Backend: POST /updateUser (JSON: userData)
+    end
+end
+Backend -> Service: updateUser(user)
+Service --> Backend: result (1: 성공, 0: 실패)
+Backend --> Frontend: {result: true or false}
+alt 성공
+    Frontend -> Frontend: closeModal(), user-profile-image 업데이트
+    Frontend -> User: UI 반영
+else 실패
+    Frontend -> User: alert("정보 수정에 실패하였습니다")
+end
+
+== 회원 탈퇴 ==
+User -> Frontend: 탈퇴 버튼 클릭 (.delete-account-btn)
+Frontend -> User: confirm("정말로 탈퇴하시겠습니까?")
+alt 확인
+    Frontend -> Backend: GET /deleteUser
+    Backend -> Service: deleteUser(userNo)
+    Service --> Backend: result (1: 성공, 0: 실패)
+    alt 성공
+        Backend --> Frontend: redirect:/users/logout
+        Frontend -> User: 로그아웃 페이지로 이동
+    else 실패
+        Backend -> Backend: throw Exception("실패")
+    end
+else 취소
+    Frontend -> User: 작업 취소
+end
+
+@enduml

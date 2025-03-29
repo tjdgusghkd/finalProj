@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="search">
+<head>
+    <meta charset="UTF-8">
+    <title>항공권 검색 결과</title>
+    <link href="/css/search.css" rel="stylesheet" type="text/css">
+    <link href="/css/header.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <style type="text/css">
+    	.flatpickr-calendar {
+    		top: 32.6rem !important;
+    	}
+    </style>
+</head>
+<body>
+    <div th:replace="~{common/header.html :: topbar}"></div>
+    <section class="main-search">
+        <h1>어디로 가시나요?</h1>
+        <div class="search-categories">
+            <button data-category="전체" class="active">전체</button>
+            <button data-category="tourist_attraction">여행지</button>
+            <button data-category="point_of_interest">관광명소</button>
+            <button data-category="lodging">숙박</button>
+            <button data-category="restaurant">음식점</button>
+            <button>항공권</button>
+        </div>
+        <div class="search-bar">
+            <div style="width: 25%; position: absolute; margin-top: 10px">
+                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30" viewBox="0 0 50 50">
+                    <path d="M 21 3 C 11.601563 3 4 10.601563 4 20 C 4 29.398438 11.601563 37 21 37 C 24.355469 37 27.460938 36.015625 30.09375 34.34375 L 42.375 46.625 L 46.625 42.375 L 34.5 30.28125 C 36.679688 27.421875 38 23.878906 38 20 C 38 10.601563 30.398438 3 21 3 Z M 21 7 C 28.199219 7 34 12.800781 34 20 C 34 27.199219 28.199219 33 21 33 C 13.800781 33 8 27.199219 8 20 C 8 12.800781 13.800781 7 21 7 Z"></path>
+                </svg>
+            </div>
+            <input type="text" id="search-input-text" placeholder="여행지, 즐길거리, 호텔 등">
+            <button onclick="searchPlaces()">검색</button>
+        </div>
+		
+        <!-- 항공권 검색창 (초기에 숨김) -->
+        <div class="flight-search-bar" style="display: none;">
+            <form class="research-form">
+                <div class="trip-group">
+                    <button type="button" class="active" id="return">왕복</button>
+                    <button type="button" id="go">편도</button>
+                </div>
+                <br>
+                <div class="re-group">
+                    <div class="re-input-group">
+                        <svg version="1.1" baseProfile="tiny" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" xml:space="preserve">
+                            <g>
+                                <path d="M5.396,16.54c0,0,0.902,0.45,1.303,0.45c0.333,0,0.665-0.082,0.96-0.237l14.621-7.679c0.495-0.26,0.859-0.697,1.025-1.231 c0.166-0.533,0.114-1.099-0.145-1.592c-0.517-0.988-1.835-1.402-2.823-0.88L15.327,8l-6.34-3.938 C8.813,3.953,8.584,3.995,8.459,4.158L6.707,6.451C6.572,6.627,6.606,6.878,6.781,7.012l4.246,3.249l-4.89,2.568l-2.491-1.44 c-0.173-0.099-0.396-0.056-0.518,0.104l-1.358,1.772c-0.064,0.084-0.093,0.19-0.079,0.296s0.069,0.2,0.153,0.265L5.396,16.54z M3.55,12.258l2.379,1.375c0.117,0.066,0.264,0.07,0.387,0.008l5.639-2.963c0.12-0.063,0.2-0.185,0.212-0.32 c0.012-0.137-0.047-0.269-0.155-0.352L7.585,6.619l1.289-1.687L15.1,8.801c0.121,0.075,0.272,0.08,0.396,0.015l5.213-2.736 c0.618-0.324,1.423-0.069,1.743,0.544c0.159,0.304,0.191,0.653,0.089,0.982c-0.103,0.33-0.327,0.6-0.633,0.76L7.286,16.044 c-0.416,0.22-0.931,0.186-1.325-0.083c-0.04-0.027-0.085-0.046-0.131-0.057l-3.181-2.471L3.55,12.258z" />
+                                <path d="M1,18.968h22c0.221,0,0.4-0.18,0.4-0.4s-0.18-0.4-0.4-0.4H1c-0.221,0-0.4,0.18-0.4,0.4S0.779,18.968,1,18.968z" />
+                                <path d="M23,19.198H1c-0.221,0-0.4,0.18-0.4,0.4s0.18,0.4,0.4,0.4h22c0.221,0,0.4-0.18,0.4-0.4S23.221,19.198,23,19.198z" />
+                            </g>
+                        </svg>
+                        <input type="text" placeholder="출발지" name="departureName" autocomplete="off">
+                        <ul id="departure-dropdown" class="dropdown-list"></ul>
+                    </div>
+
+                    <div class="re-input-group">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-plane-arrival" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" />
+                            <path d="M15 12h5a2 2 0 0 1 0 4h-15l-3 -6h3l2 2h3l-2 -7h3z" transform="rotate(15 12 12) translate(0 -1)" />
+                            <line x1="3" y1="21" x2="21" y2="21" />
+                        </svg>
+                        <input type="text" placeholder="도착지" name="arrivalName" autocomplete="off">
+                        <ul id="arrival-dropdown" class="dropdown-list"></ul>
+                    </div>
+
+                    <div class="re-calendar-container">
+                        <input type="text" name="dates" class="date-picker" placeholder="출발일 → 도착일">
+                    </div>
+                    <button type="button" class="traveler-picker research">여행자 1명</button>
+                    <button type="button" class="research-btn">검색</button>
+                    <div class="traveler-section re-travel" style="display: block;">
+                        <div class="traveler-selection re-search" style="display: none;">
+                            <input type="hidden" name="travelers" value="1" />
+                            <div class="traveler-category">
+                                <span class="category-name">성인</span> <span class="category-age">18~64세</span>
+                                <button type="button" class="decrement">-</button>
+                                <span class="count">1</span>
+                                <button type="button" class="increment">+</button>
+                            </div>
+                            <div class="traveler-category">
+                                <span class="category-name">노인</span> <span class="category-age">65세 이상</span>
+                                <button type="button" class="decrement">-</button>
+                                <span class="count">0</span>
+                                <button type="button" class="increment">+</button>
+                            </div>
+                            <div class="traveler-category">
+                                <span class="category-name">아동</span> <span class="category-age">3~17세</span>
+                                <button type="button" class="decrement">-</button>
+                                <span class="count">0</span>
+                                <button type="button" class="increment">+</button>
+                            </div>
+                            <div class="traveler-category">
+                                <span class="category-name">유아</span> <span class="category-age">0~2세</span>
+                                <button type="button" class="decrement">-</button>
+                                <span class="count">0</span>
+                                <button type="button" class="increment">+</button>
+                            </div>
+                            <div class="policy-note">
+                                <p>유아 동반 여행의 정책 및 가격은 다를 수 있으므로 예약하기 전에 티켓 제공자에게 문의하여 확인해 주세요.</p>
+                            </div>
+                            <div class="buttons">
+                                <button type="button" class="reset">재설정</button>
+                                <button type="button" class="apply">적용</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+	
+    <hr>
+    <div id="loading">
+        <img id="loading-image" src="/img/flight.gif" alt="Loading..." />
+    </div>
+    <div class="search-results-container">
+        <aside class="filters">
+            <div class="filter-group">
+                <h4>경유</h4>
+                <label><input type="checkbox" name="layover" id="direct" value="direct" >직항</label>
+                <label><input type="checkbox" name="layover" id="1stop" value="oneStop" >1회 경유</label>
+                <label><input type="checkbox" name="layover" id="2plusstops" value="multiStop"> 2회 이상 경유</label>
+            </div>
+            <hr>
+            <div class="filter-group">
+                <h4>가는 날 출발 시간</h4>
+                <label><input type="checkbox" name="out-departure-time" value="morning"> 오전 (06:00 - 11:59)</label>
+                <label><input type="checkbox" name="out-departure-time" value="afternoon"> 오후 (12:00 - 17:59)</label>
+                <label><input type="checkbox" name="out-departure-time" value="evening"> 저녁 (18:00 - 23:59)</label>
+                <label><input type="checkbox" name="out-departure-time" value="night"> 심야 (00:00 - 05:59)</label>
+            </div>
+            <hr>
+            <div class="filter-group">
+                <h4>오는 날 출발 시간</h4>
+                <label><input type="checkbox" name="in-departure-time" value="morning"> 오전 (06:00 - 11:59)</label>
+                <label><input type="checkbox" name="in-departure-time" value="afternoon"> 오후 (12:00 - 17:59)</label>
+                <label><input type="checkbox" name="in-departure-time" value="evening"> 저녁 (18:00 - 23:59)</label>
+                <label><input type="checkbox" name="in-departure-time" value="night"> 심야 (00:00 - 05:59)</label>
+            </div>
+            <hr>
+            <div class="filter-group">
+                <h4>항공사</h4>
+                <div id="airline-filters">
+                  <div th:each="flight, stat : ${flightOffers}">
+					    <div class="flight-item">
+						</div>
+					</div>
+                </div>
+            </div>
+            <hr>
+        </aside>
+
+        <main class="flight-results" th:if="${flightOffers != null and not #lists.isEmpty(flightOffers)}">
+            <div class="flight-result-header">
+                <h2 th:text="${#lists.size(flightOffers) + '개의 항공권 검색됨'}">항공권 검색 결과</h2>
+                <div class="sort-options">
+                    <span>정렬순서: </span>
+                    <select id="sort-select">
+                        <option value="best">가성비 최고</option>
+                        <option value="price">가격</option>
+                        <option value="duration">비행시간</option>
+                    </select>
+                </div>
+            </div>
+            
+            
+            
+            <div id="flight-list">
+                <!-- 수정: flight가 HashMap이므로 모든 접근을 대괄호 표기법으로 변경 -->
+                <div class="flight-container" 
+				     th:each="flight : ${flightOffers}" 
+				     th:attr="data-outbound-stops=${flight['outboundTotalStops']}, 
+ 				              data-inbound-stops=${flight['inboundTotalStops'] != null ? flight['inboundTotalStops'] : 0},  
+ 				              data-inbound-time=${flight['inboundDepartureTime']},   
+ 				              data-outbound-time=${flight['outboundDepartureTime']}"> 
+                    <div class="flight-info">
+                        <div class="airline-info">
+                            <span class="outbound-info" th:text="${flight['outboundKorAirlineName'] ?: flight['airlineNm']}"></span>
+                            <span class="inbound-info" th:if="${flight['inboundAirline'] != null and flight['inboundAirline'] != flight['outboundAirline']}"
+                                  th:text="${flight['inboundKorAirlineName']}" ></span>
+                        </div>
+                        <div class="flight-details">
+                            <!-- 출발 구간 -->
+                            <div class="departure">
+                                <div class="flight-title">
+                                    <div class="time-info outbound">
+                                        <div class="airport-code" th:text="${flight['outboundDepartureAirport']} ?: ${flight['depAirportNm']}"></div>
+                                        <div class="flight-time" th:text="${#temporals.format(flight['outboundDepartureTime'], 'a h:mm')} ?: ${#temporals.format(flight['depPlandTime'], 'a h:mm')}"></div>
+                                    </div>
+                                    <div class="flight-path"></div>
+                                    <div class="time-info outbound">
+                                        <div class="airport-code" th:text="${flight['outboundArrivalAirport']} ?: ${flight['arrAirportNm']}"></div>
+                                        <div class="flight-time" th:text="${#temporals.format(flight['outboundArrivalTime'], 'a h:mm')} ?: ${#temporals.format(flight['arrPlandTime'], 'a h:mm')}"></div>
+                                    </div>
+                                </div>
+                                <div class="duration">
+                                    <span th:text="${#temporals.format(flight['outboundDepartureTime'], 'a h:mm')}"></span>
+                                    → <span th:text="${#temporals.format(flight['outboundArrivalTime'], 'a h:mm')}"></span>
+                                    (<span th:text="${flight['outboundHasConnections'] == 'true' ? '경유 ' + flight['outboundTotalStops'] + '회' : '직항'}"></span>)
+                                </div>
+                            </div>
+                            
+
+                            <!-- 귀국 구간 (존재하면) -->
+                            <!-- 수정: 오류 발생 위치 (249번째 줄) - HashMap 키 접근 방식 변경 -->
+                            <div class="return-section">
+                                <hr style="border: 1px dashed #ccc; margin: 10px 0;">
+                                <div class="return">
+                                    <div class="flight-title" th:if="${flight['inboundDepartureTime'] != null}">
+                                        <div class="time-info inbound">
+                                            <div class="airport-code" th:text="${flight['inboundDepartureAirport']}"></div>
+                                            <div class="flight-time" th:text="${#temporals.format(flight['inboundDepartureTime'], 'a h:mm')}"></div>
+                                        </div>
+                                        <div class="flight-path"></div>
+                                        <div class="time-info inbound">
+                                            <div class="airport-code" th:text="${flight['inboundArrivalAirport']}"></div>
+                                            <div class="flight-time" th:text="${#temporals.format(flight['inboundArrivalTime'], 'a h:mm')}"></div>
+                                        </div>
+                                    </div>
+                     			<div class="duration">
+								    <span th:text="${flight['inboundDepartureTime'] != null ? #temporals.format(flight['inboundDepartureTime'], 'a h:mm') : (flight['depPlandTime'] != null ? #temporals.format(flight['depPlandTime'], 'a h:mm') : '')}"></span>
+								    →
+								    <span th:text="${flight['inboundArrivalTime'] != null ? #temporals.format(flight['inboundArrivalTime'], 'a h:mm') : (flight['arrPlandTime'] != null ? #temporals.format(flight['arrPlandTime'], 'a h:mm') : '')}"></span>
+								    (<span th:text="${flight['inboundHasConnections'] == 'true' ? '경유 ' + flight['inboundTotalStops'] + '회' : '직항'}"></span>)
+								</div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flight-price">
+                        <div class="price-info">
+                            <div class="price-title">
+                                <strong>가격 : </strong> <span th:text="${flight['price'] ?: flight['economyCharge']}"></span>
+                            </div>
+                            <button class="view-deal">예약하기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <div th:replace="~{common/footer.html :: foot}"></div>
+    <script th:inline="javascript">
+    /*<![CDATA[*/
+    	window.flightSearchResult = /*[[${flightOffers}]]*/null;
+//      	console.log("window.flightSearchResult : " + window.flightSearchResult);
+    /*]]>*/
+    </script>
+    <script th:inline="javascript" src="/js/search.js"></script>
+    <script th:inline="javascript" src="/js/flightSearchResult.js"></script>
+</body>
+</html>
