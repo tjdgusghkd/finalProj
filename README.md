@@ -1,4 +1,3 @@
-<img width="3761" height="1788" alt="image" src="https://github.com/user-attachments/assets/44c20638-649f-4c42-b260-6ade8750dcfc" /># 하플라(Happy Place) Project
 <b>KH 정보교육원 파이널 프로젝트 </b></br>
 ## Collaborator 👋
 
@@ -27,9 +26,9 @@
 
 
 ## Getting Started
-### 하모's ERD
+### 하플라's ERD
+<img width="3761" height="1788" alt="image" src="https://github.com/user-attachments/assets/44c20638-649f-4c42-b260-6ade8750dcfc" /># 하플라(Happy Place) Project
 
-![하모](https://github.com/user-attachments/assets/4132a8ee-12d6-4ca9-8098-ae7feba9d0b2)
 
 ## Introduce
-[📂 PPT 파일 다운로드](https://github.com/JuHyeong2/HobbyBoard-springboot/raw/main/src/main/resources/static/ppt/HAMO(수정8차).odp)
+
