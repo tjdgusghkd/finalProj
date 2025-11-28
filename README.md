@@ -31,4 +31,5 @@
 
 
 ## Introduce
+[📂 PPT 파일 다운로드](https://github.com/tjdgusghkd/finalProj/blob/99929e3ff63ce6abb46da946c5cbb9d5f0a92f9a/TRIP-HUNTER-HAPLA%20(1).pdf)
 
