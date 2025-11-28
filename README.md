@@ -2,7 +2,7 @@
 ## Collaborator 👋
 
 ## Project description 🧑‍💻
-<b>✔ 프로젝트 명 :</b> HAMO </br>
+<b>✔ 프로젝트 명 :</b> HAPLA </br>
 <b>✔ 목적 :</b> KH정보 교육원 파이널 프로젝트에서 여행 플랫을 A-Z까지 만들어보자. </br>
 
 ## Stacks 📝
